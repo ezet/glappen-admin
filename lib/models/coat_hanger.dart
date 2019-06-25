@@ -4,7 +4,7 @@ class CoatHanger {
   final String docId;
   final int id;
   final String user;
-  final Timestamp timestamp;
+  final DateTime timestamp;
 
   CoatHanger({
     this.docId,
