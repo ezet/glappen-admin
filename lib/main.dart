@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:garderobeladmin/services/api.dart';
 import 'package:provider/provider.dart';
 
 import 'data/db.dart';
@@ -27,7 +28,8 @@ class GarderobelAdmin extends StatelessWidget {
 
     return MultiProvider(providers: [
       StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-      Provider<DatabaseService>.value(value: DatabaseService())
+      Provider<DatabaseService>.value(value: DatabaseService()),
+      Provider<AbstractGladminApi>.value(value: LocalGladminApi())
     ], child: materialApp);
   }
 }

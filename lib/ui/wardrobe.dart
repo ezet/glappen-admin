@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/data/db.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/services/api.dart';
 import 'package:provider/provider.dart';
 
 class Wardrobe extends StatefulWidget {
@@ -57,6 +58,8 @@ class CoatHangerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AbstractGladminApi api = Provider.of<AbstractGladminApi>(context);
+
     var hangers = Provider.of<List<CoatHanger>>(context);
     if (hangers == null) {
       return Center(
