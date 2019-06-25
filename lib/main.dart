@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+
+import 'data/db.dart';
 import 'ui/sign_in.dart';
 import 'ui/tab_bar_controller.dart';
 import 'ui/theme/dark_theme.dart';
@@ -11,24 +13,21 @@ import 'ui/theme/light_theme.dart';
 
 void main() {
   runApp(
-    Garderobeladmin(),
+    GarderobelAdmin(),
   );
 }
 
-class Garderobeladmin extends StatelessWidget {
+class GarderobelAdmin extends StatelessWidget {
   static const String _title = 'Garderobeladmin';
 
   @override
   Widget build(BuildContext context) {
     var materialApp = MaterialApp(
-        title: _title,
-        theme: lightThemeData(),
-        darkTheme: darkThemeData(),
-        home: Authenticator());
+        title: _title, theme: lightThemeData(), darkTheme: darkThemeData(), home: Authenticator());
 
     return MultiProvider(providers: [
-      StreamProvider<FirebaseUser>.value(
-          value: FirebaseAuth.instance.onAuthStateChanged),
+      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+      Provider<DatabaseService>.value(value: DatabaseService())
     ], child: materialApp);
   }
 }

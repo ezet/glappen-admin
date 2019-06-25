@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:garderobeladmin/data/db.dart';
 import 'package:provider/provider.dart';
 
 class Employees extends StatefulWidget {
@@ -11,8 +10,6 @@ class Employees extends StatefulWidget {
 }
 
 class _EmployeesState extends State<Employees> {
-  final db = DatabaseService();
-
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<FirebaseUser>(context);

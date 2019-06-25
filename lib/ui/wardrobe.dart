@@ -13,7 +13,7 @@ class Wardrobe extends StatefulWidget {
 class _WardrobeState extends State<Wardrobe> {
   @override
   Widget build(BuildContext context) {
-    final db = DatabaseService();
+    final db = Provider.of<DatabaseService>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(34, 38, 43, 1),
