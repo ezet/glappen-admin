@@ -14,9 +14,9 @@ class CoatHanger {
   final DocumentReference user;
   final Timestamp stateUpdated;
   final HangerState state;
-  final DocumentReference _ref;
+  final DocumentReference ref;
 
-  CoatHanger(this._ref, {this.docId, this.id, this.user, this.stateUpdated, this.state});
+  CoatHanger(this.ref, {this.docId, this.id, this.user, this.stateUpdated, this.state});
 
   factory CoatHanger.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;

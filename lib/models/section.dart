@@ -17,7 +17,7 @@ class Section {
 
   Stream<List<CoatHanger>> getHangers() {
     return hangers
-        .where('state', isGreaterThanOrEqualTo: HangerState.CHECKING_IN.index)
+        .where('state', isGreaterThanOrEqualTo: HangerState.CHECKING_OUT.index)
         .orderBy('state')
         .orderBy('stateUpdated')
         .snapshots()

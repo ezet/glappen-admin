@@ -91,12 +91,13 @@ class CoatHangerList extends StatelessWidget {
                     bottomLeft: Radius.circular(14),
                   ),
                   splashColor: Color.fromRGBO(255, 75, 75, 1),
-                  onTap: () {
-                    Scaffold.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('deleted'),
-                      ),
-                    );
+                  onTap: () async {
+                    var result = await api.confirmCheckOut(hangers[i]);
+//                    Scaffold.of(context).showSnackBar(
+//                      SnackBar(
+//                        content: Text('deleted'),
+//                      ),
+//                    );
                   },
                   child: Container(
                     child: Center(
@@ -130,6 +131,13 @@ class CoatHangerList extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
+                    Text(
+                      hangers[i].state == HangerState.CHECKING_OUT ? "OUT" : "IN",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
+                    ),
                     Text(
                       hangers[i].id.toString(),
                       style: TextStyle(
