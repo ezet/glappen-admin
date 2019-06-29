@@ -1,28 +1,18 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import 'data/db.dart';
 import 'ui/sign_in.dart';
 import 'ui/tab_bar_controller.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
 
-GetIt locator = GetIt();
-
-void setupLocator() {
-  locator.registerLazySingleton<Firestore>(() => Firestore.instance);
-  locator.registerLazySingleton<DatabaseService>(() => DatabaseService(locator.get()));
-}
-
 void main() {
-  setupLocator();
   runApp(GarderobelAdmin());
 }
 
@@ -35,9 +25,8 @@ class GarderobelAdmin extends StatelessWidget {
         title: _title, theme: lightThemeData(), darkTheme: darkThemeData(), home: Authenticator());
 
     return MultiProvider(providers: [
-      Provider<GetIt>.value(value: locator),
+      Provider<GetIt>.value(value: getLocator(context)),
       StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-      Provider<AbstractGladminApi>.value(value: LocalGladminApi()),
     ], child: materialApp);
   }
 }

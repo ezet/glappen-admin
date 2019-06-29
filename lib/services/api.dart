@@ -1,26 +1,33 @@
-import 'package:flutter/widgets.dart';
 import 'package:garderobeladmin/data/db.dart';
-import 'package:provider/provider.dart';
 
-abstract class AbstractGladminApi {
-  void scan();
+abstract class GladminApi {
+  void scan(int code);
 
   void confirmCheckin();
 
   void confirmCheckout();
 }
 
-class LocalGladminApi extends StatelessWidget implements AbstractGladminApi {
-  @override
-  Widget build(BuildContext context) {
-    final DatabaseService service = Provider.of<DatabaseService>(context);
-    // TODO: implement build
-    return null;
+class LocalGladminApi implements GladminApi {
+  LocalGladminApi(this._databaseService);
+
+  final DatabaseService _databaseService;
+
+  void scan(int venueId) {
+    if (_hasActiveReservation()) {
+      _checkout();
+    } else {
+      _checkIn();
+    }
   }
 
-  void scan() {
-    // TODO: implement scan
+  bool _hasActiveReservation() {
+    return true;
   }
+
+  void _checkIn() {}
+
+  void _checkout() {}
 
   void confirmCheckin() {}
 

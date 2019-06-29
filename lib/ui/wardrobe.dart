@@ -59,7 +59,7 @@ class CoatHangerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AbstractGladminApi api = Provider.of<AbstractGladminApi>(context);
+    final GladminApi api = Provider.of<GetIt>(context).get();
 
     var hangers = Provider.of<List<CoatHanger>>(context);
     if (hangers == null) {
