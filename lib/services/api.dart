@@ -7,9 +7,9 @@ import 'package:garderobeladmin/models/section.dart';
 abstract class GladminApi {
   void scan(int code);
 
-  Future<bool> confirmCheckIn(CoatHanger hanger);
+  Future<bool> confirmUpdate(CoatHanger hanger);
 
-  Future<bool> confirmCheckOut(CoatHanger hanger);
+  Future<bool> rejectUpdate(CoatHanger hanger);
 
   Future simulateCheckInScan(Section section);
 
@@ -39,16 +39,19 @@ class LocalGladminApi implements GladminApi {
   void _checkout() {}
 
   @override
-  confirmCheckIn(CoatHanger hanger) async {
+  confirmUpdate(CoatHanger hanger) async {
     if (hanger.state == HangerState.CHECKING_IN)
+      // TODO: create reservation
       return _updateHangerState(hanger, HangerState.TAKEN);
     else {
+      // TODO: update reservation
       return _updateHangerState(hanger, HangerState.AVAILABLE);
     }
   }
 
   @override
-  confirmCheckOut(CoatHanger hanger) async {
+  rejectUpdate(CoatHanger hanger) async {
+    // TODO: update reservation
     if (hanger.state == HangerState.CHECKING_IN)
       return _updateHangerState(hanger, HangerState.AVAILABLE);
     else {
@@ -61,7 +64,7 @@ class LocalGladminApi implements GladminApi {
         merge: true).then((value) => true, onError: (error) {
       print(error);
       return false;
-    }).whenComplete(() => print("Done"));
+    });
   }
 
   @override

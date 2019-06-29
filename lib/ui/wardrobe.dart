@@ -92,7 +92,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(255, 75, 75, 1),
                   onTap: () async {
-                    var result = await api.confirmCheckOut(hangers[i]);
+                    var result = await api.rejectUpdate(hangers[i]);
                   },
                   child: Container(
                     child: Center(
@@ -179,7 +179,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
-                    var result = await api.confirmCheckIn(hangers[i]);
+                    var result = await api.confirmUpdate(hangers[i]);
                   },
                   child: Container(
                     child: Center(
