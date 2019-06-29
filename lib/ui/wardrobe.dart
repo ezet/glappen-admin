@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/data/db.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class Wardrobe extends StatefulWidget {
+class Wardrobe extends StatelessWidget {
   const Wardrobe({Key key}) : super(key: key);
 
   @override
-  _WardrobeState createState() => _WardrobeState();
-}
-
-class _WardrobeState extends State<Wardrobe> {
-  @override
   Widget build(BuildContext context) {
     final db = Provider.of<GetIt>(context).get<DatabaseService>();
+    final venue = Provider.of<Venue>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(34, 38, 43, 1),
         elevation: 0,
-        title: const Text(
-          'Wardrobe Tags',
+        title: Text(
+          venue?.name ?? "",
           style: TextStyle(color: Colors.white, fontSize: 22),
         ),
         actions: <Widget>[
@@ -32,7 +30,7 @@ class _WardrobeState extends State<Wardrobe> {
                 Icon(
                   Icons.undo,
                   color: Colors.white,
-                  size: 12,
+//                  size: 12,
                 ),
                 Text('Undo')
               ],
@@ -46,7 +44,7 @@ class _WardrobeState extends State<Wardrobe> {
       body: Container(
         color: Color.fromRGBO(34, 38, 43, 1),
         child: StreamProvider<List<CoatHanger>>.value(
-            value: db.streamHangers('KREps4urlJ9Ymy6g9VdY'), child: CoatHangerList()),
+            value: db.getCheckInList(venue?.id), child: CoatHangerList()),
       ),
     );
   }

@@ -1,17 +1,18 @@
-import 'package:garderobeladmin/data/db.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garderobeladmin/models/coat_hanger.dart';
 
 abstract class GladminApi {
   void scan(int code);
 
-  void confirmCheckin();
+  void confirmCheckIn();
 
-  void confirmCheckout();
+  void confirmCheckOut(CoatHanger hanger);
 }
 
 class LocalGladminApi implements GladminApi {
-  LocalGladminApi(this._databaseService);
+  LocalGladminApi(this._firestore);
 
-  final DatabaseService _databaseService;
+  final Firestore _firestore;
 
   void scan(int venueId) {
     if (_hasActiveReservation()) {
@@ -29,7 +30,7 @@ class LocalGladminApi implements GladminApi {
 
   void _checkout() {}
 
-  void confirmCheckin() {}
+  void confirmCheckIn() {}
 
-  void confirmCheckout() {}
+  void confirmCheckOut(CoatHanger hanger) {}
 }
