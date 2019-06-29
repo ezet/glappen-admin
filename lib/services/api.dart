@@ -33,11 +33,30 @@ class LocalGladminApi implements GladminApi {
 
   @override
   confirmCheckIn(CoatHanger hanger) async {
-    return true;
+    // TODO: replace with HangerState.TAKEN
+    if (hanger.state == HangerState.CHECKING_IN)
+      return _updateHangerState(hanger, HangerState.CHECKING_OUT);
+    else {
+      return _updateHangerState(hanger, HangerState.CHECKING_IN);
+    }
   }
 
   @override
   confirmCheckOut(CoatHanger hanger) async {
-    return true;
+    return Future(() => false);
+    if (hanger.state == HangerState.CHECKING_IN)
+      // TODO: replace with HangerState.AVAILABLE
+      return _updateHangerState(hanger, HangerState.CHECKING_OUT);
+    else {
+      return _updateHangerState(hanger, HangerState.CHECKING_IN);
+    }
+  }
+
+  Future<bool> _updateHangerState(CoatHanger hanger, HangerState state) async {
+    return hanger.ref.setData({'stateUpdated': FieldValue.serverTimestamp(), 'state': state.index},
+        merge: true).then((value) => true, onError: (error) {
+      print(error);
+      return false;
+    }).whenComplete(() => print("Done"));
   }
 }
