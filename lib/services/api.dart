@@ -4,16 +4,16 @@ import 'package:garderobeladmin/models/coat_hanger.dart';
 abstract class GladminApi {
   void scan(int code);
 
-  Future<bool> confirmCheckIn();
+  Future<bool> confirmCheckIn(CoatHanger hanger);
 
   Future<bool> confirmCheckOut(CoatHanger hanger);
 }
 
 class LocalGladminApi implements GladminApi {
-  LocalGladminApi(this._firestore);
+  LocalGladminApi(this._db);
 
   // ignore: unused_field
-  final Firestore _firestore;
+  final Firestore _db;
 
   void scan(int venueId) {
     if (_hasActiveReservation()) {
@@ -32,7 +32,7 @@ class LocalGladminApi implements GladminApi {
   void _checkout() {}
 
   @override
-  confirmCheckIn() async {
+  confirmCheckIn(CoatHanger hanger) async {
     return true;
   }
 
