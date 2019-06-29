@@ -18,15 +18,9 @@ class VenueSelector extends StatelessWidget {
         child: Consumer<Device>(
             builder: (context, device, child) => MultiProvider(
                   providers: [
-                    StreamProvider<Venue>.value(
-                      value: device?.venue
-                          ?.snapshots()
-                          ?.map((snapshot) => Venue.fromFirestore(snapshot)),
-                    ),
+                    StreamProvider<Venue>.value(value: device?.getVenue()),
                     StreamProvider<Section>.value(
-                      value: device?.section
-                          ?.snapshots()
-                          ?.map((snapshot) => Section.fromFirestore(snapshot)),
+                      value: device?.getSection(),
                     )
                   ],
                   child: TabBarController(),

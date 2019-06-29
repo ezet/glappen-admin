@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:garderobeladmin/data/db.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
-import 'package:garderobeladmin/models/venue.dart';
+import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/services/api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -11,11 +10,10 @@ class Wardrobe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final db = Provider.of<GetIt>(context).get<DatabaseService>();
-    final venue = Provider.of<Venue>(context);
+    final section = Provider.of<Section>(context);
 
     return StreamProvider<List<CoatHanger>>.value(
-        value: db.getCheckInList(venue?.id), child: CoatHangerList());
+        value: section?.getHangers(), child: CoatHangerList());
   }
 }
 
@@ -124,13 +122,17 @@ class CoatHangerList extends StatelessWidget {
                           fontSize: 30,
                         ),
                       ),
-                      Text(
-                        hangers[i].user,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                      StreamBuilder(
+                        stream: hangers[i].getUser().map((it) => it.name),
+                        initialData: "",
+                        builder: (context, userSnapshot) => Text(
+                              userSnapshot.data,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                      )
                     ],
                   ),
                 ),

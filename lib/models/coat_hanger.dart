@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garderobeladmin/models/user.dart';
 
 class CoatHanger {
   final String docId;
-  final int id;
-  final String user;
+  final String id;
+  final DocumentReference user;
   final Timestamp timestamp;
 
   CoatHanger({
@@ -22,4 +23,6 @@ class CoatHanger {
       timestamp: data['timestamp'] ?? null,
     );
   }
+
+  Stream<User> getUser() => user.snapshots().map((s) => User.fromFirestore(s));
 }

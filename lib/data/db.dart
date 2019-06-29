@@ -32,7 +32,7 @@ class DatabaseService {
   Stream<Device> getDevice(String deviceId) {
     // TODO: handle single error
     var ref = _db.collection('devices').document(deviceId);
-    return ref.snapshots().map((snapshot) => Device.fromFirestore(snapshot, _db));
+    return ref.snapshots().map((snapshot) => Device.fromFirestore(snapshot));
   }
 
   Stream<Venue> getVenueForDevice(String deviceId) {
