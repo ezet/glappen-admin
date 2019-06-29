@@ -14,39 +14,8 @@ class Wardrobe extends StatelessWidget {
     final db = Provider.of<GetIt>(context).get<DatabaseService>();
     final venue = Provider.of<Venue>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(34, 38, 43, 1),
-        elevation: 0,
-        title: Text(
-          venue?.name ?? "",
-          style: TextStyle(color: Colors.white, fontSize: 22),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            splashColor: Colors.red,
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.undo,
-                  color: Colors.white,
-//                  size: 12,
-                ),
-                Text('Undo')
-              ],
-            ),
-            onPressed: () => {
-                  print('object'),
-                },
-          ),
-        ],
-      ),
-      body: Container(
-        color: Color.fromRGBO(34, 38, 43, 1),
-        child: StreamProvider<List<CoatHanger>>.value(
-            value: db.getCheckInList(venue?.id), child: CoatHangerList()),
-      ),
-    );
+    return StreamProvider<List<CoatHanger>>.value(
+        value: db.getCheckInList(venue?.id), child: CoatHangerList());
   }
 }
 
@@ -57,7 +26,7 @@ class CoatHangerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GladminApi api = Provider.of<GetIt>(context).get();
+    final api = Provider.of<GetIt>(context).get<GladminApi>();
 
     var hangers = Provider.of<List<CoatHanger>>(context);
     if (hangers == null) {
@@ -184,13 +153,16 @@ class CoatHangerList extends StatelessWidget {
                         bottomRight: Radius.circular(14),
                       ),
                       splashColor: Color.fromRGBO(105, 212, 103, 1),
-                      onTap: () {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('deleted row $i'),
-                            backgroundColor: Color.fromRGBO(27, 31, 35, 1),
-                          ),
-                        );
+                      onTap: () async {
+                        var result = await api.confirmCheckIn();
+                        if (result) {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Checked in: $i'),
+                              backgroundColor: Color.fromRGBO(27, 31, 35, 1),
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         child: Center(

@@ -4,16 +4,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garderobeladmin/services/locator.dart';
+import 'package:garderobeladmin/ui/sign_in.dart';
+import 'package:garderobeladmin/ui/venue_selector.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import 'ui/sign_in.dart';
-import 'ui/tab_bar_controller.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
 
 void main() {
-  runApp(GarderobelAdmin());
+  runApp(
+    GarderobelAdmin(),
+  );
 }
 
 class GarderobelAdmin extends StatelessWidget {
@@ -59,7 +61,7 @@ class _AuthenticatorState extends State<Authenticator> {
     if (_currentUser == null) {
       return SignIn();
     } else {
-      return TabBarController();
+      return VenueSelector();
     }
   }
 
