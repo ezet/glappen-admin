@@ -17,6 +17,26 @@ class Section {
 
   Stream<List<CoatHanger>> getHangers() {
     return hangers
+        .where('state', isGreaterThanOrEqualTo: HangerState.CHECKING_IN.index)
+        .orderBy('state')
+        .orderBy('stateUpdated')
+        .snapshots()
+        .map((list) => list.documents.map((doc) => CoatHanger.fromFirestore(doc)).toList());
+  }
+
+  Stream<List<CoatHanger>> getCheckingIn() {
+    return hangers
+        .where('reserved', isGreaterThan: Timestamp.fromMicrosecondsSinceEpoch(0))
+        .where('claimed', isNull: true)
+        .orderBy('reserved')
+        .snapshots()
+        .map((list) => list.documents.map((doc) => CoatHanger.fromFirestore(doc)).toList());
+  }
+
+  Stream<List<CoatHanger>> getCheckingOut() {
+    return hangers
+        .where('checkout', isGreaterThan: Timestamp.fromMicrosecondsSinceEpoch(0))
+        .orderBy('checkout')
         .snapshots()
         .map((list) => list.documents.map((doc) => CoatHanger.fromFirestore(doc)).toList());
   }

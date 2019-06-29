@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/device.dart';
+import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/models/venue.dart';
 
 class DatabaseService {
@@ -52,5 +53,11 @@ class DatabaseService {
         .snapshots()
         .asyncMap((venue) => venue.documents.single.reference.parent().parent().get())
         .map((venue) => Venue.fromFirestore(venue));
+  }
+
+  Stream<User> getUser(String userId) {
+    // TODO: handle single error
+    var ref = _db.collection('users').document(userId);
+    return ref.snapshots().map((snapshot) => User.fromFirestore(snapshot));
   }
 }
