@@ -1,18 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/user.dart';
 
+enum HangerState { AVAILABLE, TAKEN, CHECKING_IN, CHECKING_OUT }
+
 class CoatHanger {
   final String docId;
   final String id;
   final DocumentReference user;
-  final Timestamp timestamp;
+  final Timestamp stateUpdated;
+  final HangerState state;
 
-  CoatHanger({
-    this.docId,
-    this.id,
-    this.user,
-    this.timestamp,
-  });
+  CoatHanger({this.docId, this.id, this.user, this.stateUpdated, this.state});
 
   factory CoatHanger.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
@@ -20,7 +18,8 @@ class CoatHanger {
       docId: doc.documentID,
       id: data['id'] ?? null,
       user: data['user'] ?? '',
-      timestamp: data['timestamp'] ?? null,
+      state: HangerState.values[data['state']],
+      stateUpdated: data['stateUpdated'] ?? null,
     );
   }
 

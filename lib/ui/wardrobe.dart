@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/section.dart';
+import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/ui/profile.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -112,28 +114,34 @@ class CoatHangerList extends StatelessWidget {
                       ),
                     ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text(
-                        hangers[i].id.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
+                  child: Material(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text(
+                          hangers[i].id.toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                          ),
                         ),
-                      ),
-                      StreamBuilder(
-                        stream: hangers[i].getUser().map((it) => it.name),
-                        initialData: "",
-                        builder: (context, userSnapshot) => Text(
-                              userSnapshot.data,
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                      )
-                    ],
+                        StreamBuilder<User>(
+                            stream: hangers[i].getUser(),
+                            builder: (context, userSnapshot) => InkWell(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Profile(userSnapshot.data.docId))),
+                                  child: Text(
+                                    userSnapshot.data?.name ?? "",
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                ))
+                      ],
+                    ),
                   ),
                 ),
               ),
