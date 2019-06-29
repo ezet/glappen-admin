@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>221769230897-cquh1kbqqin10eguksa9jf1t832f9dft.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.221769230897-cquh1kbqqin10eguksa9jf1t832f9dft</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>221769230897-7nopaugs35vg2o0o5dvijgrs3ve2l0h1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD_nb96XCvAjW1tOm2Wh2B4-YtK6TpPL-o</string>
+	<key>GCM_SENDER_ID</key>
+	<string>221769230897</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>app.garderobelappen.admin</string>
+	<key>PROJECT_ID</key>
+	<string>garderobelappen</string>
+	<key>STORAGE_BUCKET</key>
+	<string>garderobelappen.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:221769230897:ios:b5fe0749c09aa172</string>
+	<key>DATABASE_URL</key>
+	<string>https://garderobelappen.firebaseio.com</string>
+</dict>
+</plist>
