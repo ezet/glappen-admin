@@ -93,11 +93,6 @@ class CoatHangerList extends StatelessWidget {
                   splashColor: Color.fromRGBO(255, 75, 75, 1),
                   onTap: () async {
                     var result = await api.confirmCheckOut(hangers[i]);
-//                    Scaffold.of(context).showSnackBar(
-//                      SnackBar(
-//                        content: Text('deleted'),
-//                      ),
-//                    );
                   },
                   child: Container(
                     child: Center(
@@ -185,14 +180,6 @@ class CoatHangerList extends StatelessWidget {
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
                     var result = await api.confirmCheckIn(hangers[i]);
-                    if (result) {
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Checked in: $i'),
-                          backgroundColor: Color.fromRGBO(27, 31, 35, 1),
-                        ),
-                      );
-                    }
                   },
                   child: Container(
                     child: Center(
