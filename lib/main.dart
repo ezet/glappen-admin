@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'data/db.dart';
@@ -13,10 +14,16 @@ import 'ui/tab_bar_controller.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
 
+GetIt locator = GetIt();
+
+void setupLocator() {
+  locator.registerLazySingleton<Firestore>(() => Firestore.instance);
+  locator.registerLazySingleton<DatabaseService>(() => DatabaseService(locator.get()));
+}
+
 void main() {
-  runApp(
-    GarderobelAdmin(),
-  );
+  setupLocator();
+  runApp(GarderobelAdmin());
 }
 
 class GarderobelAdmin extends StatelessWidget {
@@ -28,10 +35,9 @@ class GarderobelAdmin extends StatelessWidget {
         title: _title, theme: lightThemeData(), darkTheme: darkThemeData(), home: Authenticator());
 
     return MultiProvider(providers: [
+      Provider<GetIt>.value(value: locator),
       StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-      Provider<DatabaseService>.value(value: DatabaseService()),
       Provider<AbstractGladminApi>.value(value: LocalGladminApi()),
-      Provider<Firestore>.value(value: Firestore.instance)
     ], child: materialApp);
   }
 }

@@ -1,5 +1,5 @@
+import 'package:firebase_ui/flutter_firebase_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_ui/flutter_firebase_ui.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({Key key}) : super(key: key);
@@ -18,6 +18,8 @@ class SignIn extends StatelessWidget {
         ProvidersTypes.google,
         ProvidersTypes.email,
       ],
+      avoidBottomInset: true,
+      showBar: true,
     );
   }
 }

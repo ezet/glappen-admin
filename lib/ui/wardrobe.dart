@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/data/db.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class Wardrobe extends StatefulWidget {
@@ -14,7 +15,7 @@ class Wardrobe extends StatefulWidget {
 class _WardrobeState extends State<Wardrobe> {
   @override
   Widget build(BuildContext context) {
-    final db = Provider.of<DatabaseService>(context);
+    final db = Provider.of<GetIt>(context).get<DatabaseService>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(34, 38, 43, 1),
