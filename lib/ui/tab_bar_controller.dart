@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garderobeladmin/models/venue.dart';
 import 'package:provider/provider.dart';
 
 import 'employees.dart';
@@ -29,87 +30,95 @@ class _TabBarControllerState extends State<TabBarController> {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseUser user = Provider.of(context);
-
-    return _buildScaffold(context, user);
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
   }
 
-  Scaffold _buildScaffold(BuildContext context, FirebaseUser user) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(34, 38, 43, 1),
-        elevation: 0,
-        title: Text(
-          "VenueName",
-          style: TextStyle(color: Colors.white, fontSize: 22),
+  Center _buildBody() {
+    return Center(
+      child: _tabs.elementAt(_selectedIndex),
+    );
+  }
+
+  BottomNavigationBar _buildBottomNavigationBar() {
+    final FirebaseUser user = Provider.of(context);
+    return BottomNavigationBar(
+      showUnselectedLabels: false,
+      backgroundColor: Color.fromRGBO(27, 31, 35, 1),
+      elevation: 0,
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.home,
+            color: Colors.amber,
+          ),
+          title: Text(
+            'Wardrobe',
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 1),
+            ),
+          ),
         ),
-        actions: <Widget>[
-          FlatButton(
-            splashColor: Colors.red,
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.undo,
-                  color: Colors.white,
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.attach_money,
+            color: Colors.green,
+          ),
+          title: Text(
+            'Reports',
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 1),
+            ),
+          ),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.person,
+            color: Colors.red,
+          ),
+          title: Text(
+            user.displayName,
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 1),
+            ),
+          ),
+        )
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
+  }
+
+  AppBar _buildAppBar() {
+    Venue venue = Provider.of(context);
+    return AppBar(
+      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
+      elevation: 0,
+      title: Text(
+        venue?.name ?? "",
+        style: TextStyle(color: Colors.white, fontSize: 22),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          splashColor: Colors.red,
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.undo,
+                color: Colors.white,
 //                  size: 12,
-                ),
-                Text('Undo')
-              ],
-            ),
-            onPressed: () => {
-                  print('object'),
-                },
-          ),
-        ],
-      ),
-      body: Center(
-        child: _tabs.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        showUnselectedLabels: false,
-        backgroundColor: Color.fromRGBO(27, 31, 35, 1),
-        elevation: 0,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: Colors.amber,
-            ),
-            title: Text(
-              'Wardrobe',
-              style: TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 1),
               ),
-            ),
+              Text('Undo')
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.attach_money,
-              color: Colors.green,
-            ),
-            title: Text(
-              'Reports',
-              style: TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 1),
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              color: Colors.red,
-            ),
-            title: Text(
-              user.displayName,
-              style: TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 1),
-              ),
-            ),
-          )
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+          onPressed: () => {
+                print('object'),
+              },
+        ),
+      ],
     );
   }
 }
