@@ -8,6 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class VenueSelector extends StatelessWidget {
+  const VenueSelector({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final DatabaseService dbService = Provider.of<GetIt>(context).get();
@@ -19,9 +21,7 @@ class VenueSelector extends StatelessWidget {
             builder: (context, device, child) => MultiProvider(
                   providers: [
                     StreamProvider<Venue>.value(value: device?.getVenue()),
-                    StreamProvider<Section>.value(
-                      value: device?.getSection(),
-                    )
+                    StreamProvider<Section>.value(value: device?.getSection()),
                   ],
                   child: TabBarController(),
                 )));

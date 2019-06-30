@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/ui/reservations.dart';
+import 'package:garderobeladmin/ui/venue.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +25,9 @@ class _TabBarControllerState extends State<TabBarController> {
 
   static const List<Widget> _tabs = <Widget>[
     Wardrobe(),
-    Wardrobe(),
+    Reservations(),
     Employees(),
+    VenueSettingsView()
   ];
 
   void _onItemTapped(int index) {
@@ -55,7 +58,7 @@ class _TabBarControllerState extends State<TabBarController> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.home,
+            Icons.drag_handle,
             color: Colors.amber,
           ),
           title: Text(
@@ -71,7 +74,7 @@ class _TabBarControllerState extends State<TabBarController> {
             color: Colors.green,
           ),
           title: Text(
-            'Reports',
+            'Reservations',
             style: TextStyle(
               color: Color.fromRGBO(255, 255, 255, 1),
             ),
@@ -88,7 +91,19 @@ class _TabBarControllerState extends State<TabBarController> {
               color: Color.fromRGBO(255, 255, 255, 1),
             ),
           ),
-        )
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.home,
+            color: Colors.amber,
+          ),
+          title: Text(
+            'Venue',
+            style: TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 1),
+            ),
+          ),
+        ),
       ],
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
