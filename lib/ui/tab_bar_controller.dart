@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
+import 'package:garderobeladmin/services/api.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import 'employees.dart';
@@ -93,7 +96,10 @@ class _TabBarControllerState extends State<TabBarController> {
   }
 
   AppBar _buildAppBar() {
-    Venue venue = Provider.of(context);
+    final Venue venue = Provider.of(context);
+    final Section section = Provider.of(context);
+    final GladminApi api = Provider.of<GetIt>(context).get();
+
     return AppBar(
       backgroundColor: Color.fromRGBO(34, 38, 43, 1),
       elevation: 0,
@@ -105,18 +111,16 @@ class _TabBarControllerState extends State<TabBarController> {
         FlatButton(
           splashColor: Colors.red,
           child: Row(
-            children: <Widget>[
-              Icon(
-                Icons.undo,
-                color: Colors.white,
-//                  size: 12,
-              ),
-              Text('Undo')
-            ],
+            children: <Widget>[Text('Scan in')],
           ),
-          onPressed: () => {
-                print('object'),
-              },
+          onPressed: () async => {await api.simulateCheckInScan(section)},
+        ),
+        FlatButton(
+          splashColor: Colors.red,
+          child: Row(
+            children: <Widget>[Text('Scan out')],
+          ),
+          onPressed: () async => {await api.simulateCheckOutScan(section)},
         ),
       ],
     );

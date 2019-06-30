@@ -1,12 +1,19 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/models/section.dart';
 
 abstract class GladminApi {
   void scan(int code);
 
-  Future<bool> confirmCheckIn(CoatHanger hanger);
+  Future<bool> confirmUpdate(CoatHanger hanger);
 
-  Future<bool> confirmCheckOut(CoatHanger hanger);
+  Future<bool> rejectUpdate(CoatHanger hanger);
+
+  Future simulateCheckInScan(Section section);
+
+  Future simulateCheckOutScan(Section section);
 }
 
 class LocalGladminApi implements GladminApi {
@@ -32,23 +39,23 @@ class LocalGladminApi implements GladminApi {
   void _checkout() {}
 
   @override
-  confirmCheckIn(CoatHanger hanger) async {
-    // TODO: replace with HangerState.TAKEN
+  confirmUpdate(CoatHanger hanger) async {
     if (hanger.state == HangerState.CHECKING_IN)
-      return _updateHangerState(hanger, HangerState.CHECKING_OUT);
+      // TODO: create reservation
+      return _updateHangerState(hanger, HangerState.TAKEN);
     else {
-      return _updateHangerState(hanger, HangerState.CHECKING_IN);
+      // TODO: update reservation
+      return _updateHangerState(hanger, HangerState.AVAILABLE);
     }
   }
 
   @override
-  confirmCheckOut(CoatHanger hanger) async {
-    return Future(() => false);
+  rejectUpdate(CoatHanger hanger) async {
+    // TODO: update reservation
     if (hanger.state == HangerState.CHECKING_IN)
-      // TODO: replace with HangerState.AVAILABLE
-      return _updateHangerState(hanger, HangerState.CHECKING_OUT);
+      return _updateHangerState(hanger, HangerState.AVAILABLE);
     else {
-      return _updateHangerState(hanger, HangerState.CHECKING_IN);
+      return _updateHangerState(hanger, HangerState.TAKEN);
     }
   }
 
@@ -57,6 +64,26 @@ class LocalGladminApi implements GladminApi {
         merge: true).then((value) => true, onError: (error) {
       print(error);
       return false;
-    }).whenComplete(() => print("Done"));
+    });
+  }
+
+  @override
+  simulateCheckInScan(Section section) async {
+    section.hangers.add({
+      'id': Random().nextInt(9999).toString(),
+      'state': HangerState.CHECKING_IN.index,
+      'stateUpdated': FieldValue.serverTimestamp(),
+      'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
+    });
+  }
+
+  @override
+  simulateCheckOutScan(Section section) async {
+    section.hangers.add({
+      'id': Random().nextInt(9999).toString(),
+      'state': HangerState.CHECKING_OUT.index,
+      'stateUpdated': FieldValue.serverTimestamp(),
+      'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
+    });
   }
 }
