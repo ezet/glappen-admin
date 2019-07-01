@@ -34,7 +34,15 @@ class WardrobeView extends StatelessWidget with ModelMixin {
     return buildProvider(
         context,
         Scaffold(
-          appBar: AppBar(title: Text("Title")),
+          appBar: AppBar(
+            title: Text(Provider.of<Venue>(context).name),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => {},
+              ),
+            ],
+          ),
           body: WardrobeList(),
         ));
   }
