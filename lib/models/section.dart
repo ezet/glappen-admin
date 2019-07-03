@@ -5,14 +5,15 @@ import 'coat_hanger.dart';
 
 class Section {
   final String docId;
+  final String name;
   final CollectionReference hangers;
   final DocumentReference wardrobe;
 
-  Section(this.docId, this.hangers, this.wardrobe);
+  Section(this.docId, this.name, this.hangers, this.wardrobe);
 
   factory Section.fromFirestore(DocumentSnapshot doc) {
-    return Section(
-        doc.documentID, doc.reference.collection('hangers'), doc.reference.parent().parent());
+    return Section(doc.documentID, doc.data['name'], doc.reference.collection('hangers'),
+        doc.reference.parent().parent());
   }
 
   Stream<List<CoatHanger>> getHangers() {

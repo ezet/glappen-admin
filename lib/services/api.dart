@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/models/device.dart';
 import 'package:garderobeladmin/models/section.dart';
+import 'package:garderobeladmin/models/user.dart';
+import 'package:garderobeladmin/models/wardrobe.dart';
 
 abstract class GladminApi {
   void scan(int code);
@@ -14,6 +17,12 @@ abstract class GladminApi {
   Future simulateCheckInScan(Section section);
 
   Future simulateCheckOutScan(Section section);
+
+  Stream<Device> getDevice(String deviceId);
+
+  Stream<User> getUser(String userId);
+
+  Future createWardrobe(Wardrobe wardrobe);
 }
 
 class LocalGladminApi implements GladminApi {
@@ -21,6 +30,18 @@ class LocalGladminApi implements GladminApi {
 
   // ignore: unused_field
   final Firestore _db;
+
+  Stream<Device> getDevice(String deviceId) {
+    // TODO: handle single error
+    var ref = _db.collection('devices').document(deviceId);
+    return ref.snapshots().map((snapshot) => Device.fromFirestore(snapshot));
+  }
+
+  Stream<User> getUser(String userId) {
+    // TODO: handle single error
+    var ref = _db.collection('users').document(userId);
+    return ref.snapshots().map((snapshot) => User.fromFirestore(snapshot));
+  }
 
   void scan(int venueId) {
     if (_hasActiveReservation()) {
@@ -85,5 +106,11 @@ class LocalGladminApi implements GladminApi {
       'stateUpdated': FieldValue.serverTimestamp(),
       'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
     });
+  }
+
+  @override
+  createWardrobe(Wardrobe wardrobe) async {
+    // TODO: implement createWardrobe
+    return null;
   }
 }

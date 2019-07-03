@@ -9,12 +9,14 @@ class Venue {
   final String logo;
   final String url;
   final CollectionReference wardrobes;
+  final DocumentReference _ref;
 
-  Venue({this.id, this.name, this.email, this.city, this.logo, this.url, this.wardrobes});
+  Venue(this._ref,
+      {this.id, this.name, this.email, this.city, this.logo, this.url, this.wardrobes});
 
   factory Venue.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
-    return Venue(
+    return Venue(doc.reference,
         id: doc.documentID,
         name: data['name'] ?? '',
         email: data['email'] ?? '',
@@ -28,5 +30,9 @@ class Venue {
     return wardrobes
         .snapshots()
         .map((list) => list.documents.map((item) => Wardrobe.fromFirestore(item)).toList());
+  }
+
+  Future<DocumentReference> addWardrobe(Wardrobe wardrobe) async {
+    return wardrobes.add(wardrobe.toFirestore());
   }
 }

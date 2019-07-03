@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:garderobeladmin/services/api.dart';
 import 'package:garderobeladmin/services/locator.dart';
+import 'package:garderobeladmin/ui/bottombar/tab_bar_controller.dart';
 import 'package:garderobeladmin/ui/sign_in.dart';
-import 'package:garderobeladmin/ui/venue_selector.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import 'models/device.dart';
+import 'models/section.dart';
+import 'models/venue.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
 
@@ -26,10 +30,23 @@ class GarderobelAdmin extends StatelessWidget {
     var materialApp = MaterialApp(
         title: _title, theme: lightThemeData(), darkTheme: darkThemeData(), home: Authenticator());
 
-    return MultiProvider(providers: [
-      Provider<GetIt>.value(value: getLocator(context)),
-      StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-    ], child: materialApp);
+    return MultiProvider(
+        providers: [
+          StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+          Provider<GetIt>.value(value: getLocator(context)),
+        ],
+        child: Consumer<GetIt>(
+          builder: (_, getIt, widget) => StreamProvider<Device>.value(
+              value: getIt.get<GladminApi>().getDevice('kEPiq0dXzA3uRIoyaGDC'),
+              child: Consumer<Device>(
+                  builder: (context, device, child) => MultiProvider(
+                        providers: [
+                          StreamProvider<Venue>.value(value: device?.getVenue()),
+                          StreamProvider<Section>.value(value: device?.getSection()),
+                        ],
+                        child: materialApp,
+                      ))),
+        ));
   }
 }
 
@@ -61,7 +78,7 @@ class _AuthenticatorState extends State<Authenticator> {
     if (_currentUser == null) {
       return SignIn();
     } else {
-      return VenueSelector();
+      return TabBarController();
     }
   }
 
