@@ -30,6 +30,8 @@ class ManageVenue extends StatelessWidget {
   }
 }
 
+enum ConfirmAction { CANCEL, DELETE }
+
 class WardrobeList extends StatelessWidget {
   const WardrobeList({Key key}) : super(key: key);
 
@@ -51,10 +53,35 @@ class WardrobeList extends StatelessWidget {
   Widget _buildRow(BuildContext context, Wardrobe wardrobe) {
     return ListTile(
       title: Text(wardrobe?.name ?? ""),
-      onLongPress: ,
-      onTap: () => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsView(wardrobe)))
-          },
+      onLongPress: () => _showDeleteDialog(context, wardrobe),
+      onTap: () =>
+          Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsView(wardrobe))),
     );
+  }
+
+  _showDeleteDialog(BuildContext context, Wardrobe wardrobe) async {
+    final result = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Delete wardrobe"),
+            content: Text("Do you want to delete this wardrobe?"),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context, ConfirmAction.CANCEL);
+                  },
+                  child: Text("CANCEL")),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pop(context, ConfirmAction.DELETE);
+                  },
+                  child: Text("DELETE"))
+            ],
+          );
+        });
+    if (result == ConfirmAction.DELETE) {
+      await wardrobe.delete();
+    }
   }
 }

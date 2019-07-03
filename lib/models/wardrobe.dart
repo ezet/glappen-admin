@@ -6,16 +6,18 @@ class Wardrobe {
   final String color;
   final int price;
   final CollectionReference sections;
+  final DocumentReference ref;
 
   static const jsonName = "name";
   static const jsonColor = "color";
   static const jsonPrice = "price";
   static const jsonSection = "section";
 
-  Wardrobe({this.name, this.color, this.price, this.sections});
+  Wardrobe({this.name, this.color, this.price, this.sections, this.ref});
 
   factory Wardrobe.fromFirestore(DocumentSnapshot snapshot) {
     return Wardrobe(
+        ref: snapshot.reference,
         name: snapshot.data[jsonName],
         color: snapshot.data[jsonColor],
         price: snapshot.data[jsonPrice],
@@ -30,5 +32,9 @@ class Wardrobe {
 
   Map<String, dynamic> toFirestore() {
     return {jsonName: name, jsonPrice: price, jsonColor: color};
+  }
+
+  Future<void> delete() async {
+    return ref.delete();
   }
 }
