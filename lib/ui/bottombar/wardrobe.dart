@@ -181,8 +181,8 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
-                    venue.confirmCheckIn(hangers[i]);
-                    var result = await api.confirmUpdate(hangers[i]);
+                    venue.handleConfirmation(hangers[i]);
+//                    var result = await api.confirmUpdate(hangers[i]);
                   },
                   child: Container(
                     child: Center(

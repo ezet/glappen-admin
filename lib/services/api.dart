@@ -7,8 +7,6 @@ import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/user.dart';
 
 abstract class GladminApi {
-  void scan(int code);
-
   Future<bool> confirmUpdate(CoatHanger hanger);
 
   Future<bool> rejectUpdate(CoatHanger hanger);
@@ -39,22 +37,6 @@ class LocalGladminApi implements GladminApi {
     var ref = _db.collection('users').document(userId);
     return ref.snapshots().map((snapshot) => User.fromFirestore(snapshot));
   }
-
-  void scan(int venueId) {
-    if (_hasActiveReservation()) {
-      _checkout();
-    } else {
-      _checkIn();
-    }
-  }
-
-  bool _hasActiveReservation() {
-    return true;
-  }
-
-  void _checkIn() {}
-
-  void _checkout() {}
 
   @override
   confirmUpdate(CoatHanger hanger) async {

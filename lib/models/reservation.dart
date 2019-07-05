@@ -47,4 +47,10 @@ class Reservation {
       jsonSection: hanger.section,
     };
   }
+
+  static Map getCheckOutData(CoatHanger hanger) {
+    return {
+      jsonCheckOut: FieldValue.serverTimestamp(),
+    };
+  }
 }

@@ -10,23 +10,26 @@ enum HangerState {
 }
 
 class CoatHanger {
+  final DocumentReference ref;
   final String docId;
   final String id;
   final DocumentReference user;
   final Timestamp stateUpdated;
   final HangerState state;
-  final DocumentReference ref;
+  final DocumentReference reservation;
 
-  CoatHanger(this.ref, {this.docId, this.id, this.user, this.stateUpdated, this.state});
+  CoatHanger(
+      {this.ref, this.docId, this.id, this.user, this.stateUpdated, this.state, this.reservation});
 
   factory CoatHanger.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     return CoatHanger(
-      doc.reference,
+      ref: doc.reference,
       docId: doc.documentID,
       id: data['id'] ?? null,
       user: data['user'] ?? '',
       state: HangerState.values[data['state']],
+      reservation: data['reservation'],
       stateUpdated: data['stateUpdated'] ?? null,
     );
   }
