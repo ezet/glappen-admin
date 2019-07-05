@@ -5,7 +5,6 @@ import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/device.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/user.dart';
-import 'package:garderobeladmin/models/wardrobe.dart';
 
 abstract class GladminApi {
   void scan(int code);
@@ -21,8 +20,6 @@ abstract class GladminApi {
   Stream<Device> getDevice(String deviceId);
 
   Stream<User> getUser(String userId);
-
-  Future createWardrobe(Wardrobe wardrobe);
 }
 
 class LocalGladminApi implements GladminApi {
@@ -61,10 +58,10 @@ class LocalGladminApi implements GladminApi {
 
   @override
   confirmUpdate(CoatHanger hanger) async {
-    if (hanger.state == HangerState.CHECKING_IN)
+    if (hanger.state == HangerState.CHECKING_IN) {
       // TODO: create reservation
       return _updateHangerState(hanger, HangerState.TAKEN);
-    else {
+    } else {
       // TODO: update reservation
       return _updateHangerState(hanger, HangerState.AVAILABLE);
     }
@@ -73,9 +70,10 @@ class LocalGladminApi implements GladminApi {
   @override
   rejectUpdate(CoatHanger hanger) async {
     // TODO: update reservation
-    if (hanger.state == HangerState.CHECKING_IN)
+    if (hanger.state == HangerState.CHECKING_IN) {
+//      hanger.createReservation();
       return _updateHangerState(hanger, HangerState.AVAILABLE);
-    else {
+    } else {
       return _updateHangerState(hanger, HangerState.TAKEN);
     }
   }
@@ -90,27 +88,37 @@ class LocalGladminApi implements GladminApi {
 
   @override
   simulateCheckInScan(Section section) async {
-    section.hangers.add({
-      'id': Random().nextInt(9999).toString(),
-      'state': HangerState.CHECKING_IN.index,
-      'stateUpdated': FieldValue.serverTimestamp(),
-      'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
-    });
+    final hangers = await section.hangers
+        .where('state', isEqualTo: HangerState.AVAILABLE)
+        .limit(1)
+        .getDocuments();
+    if (hangers.documents.isEmpty) {
+      section.hangers.add({
+        'id': Random().nextInt(9999).toString(),
+        'state': HangerState.CHECKING_IN.index,
+        'stateUpdated': FieldValue.serverTimestamp(),
+        'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
+      });
+    } else {
+      final hanger = hangers.documents.first;
+      hanger.reference.updateData({
+        'state': HangerState.CHECKING_IN.index,
+        'stateUpdated': FieldValue.serverTimestamp(),
+        'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
+      });
+    }
   }
 
   @override
   simulateCheckOutScan(Section section) async {
-    section.hangers.add({
-      'id': Random().nextInt(9999).toString(),
-      'state': HangerState.CHECKING_OUT.index,
-      'stateUpdated': FieldValue.serverTimestamp(),
-      'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
-    });
-  }
-
-  @override
-  createWardrobe(Wardrobe wardrobe) async {
-    // TODO: implement createWardrobe
-    return null;
+    final hangers =
+        await section.hangers.where('state', isEqualTo: HangerState.TAKEN).limit(1).getDocuments();
+    if (hangers.documents.isNotEmpty) {
+      final hanger = hangers.documents.first;
+      hanger.reference.updateData({
+        'state': HangerState.CHECKING_OUT.index,
+        'stateUpdated': FieldValue.serverTimestamp(),
+      });
+    }
   }
 }

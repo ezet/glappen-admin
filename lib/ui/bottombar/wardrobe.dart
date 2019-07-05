@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/user.dart';
+import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
 import 'package:garderobeladmin/ui/profile.dart';
 import 'package:get_it/get_it.dart';
@@ -54,6 +55,7 @@ class CoatHangerList extends StatelessWidget {
 
   Container buildCheckInItem(
       BuildContext context, List<CoatHanger> hangers, int i, GladminApi api) {
+    final venue = Provider.of<Venue>(context);
     return Container(
       height: 110,
       decoration: BoxDecoration(
@@ -179,6 +181,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
+                    venue.confirmCheckIn(hangers[i]);
                     var result = await api.confirmUpdate(hangers[i]);
                   },
                   child: Container(

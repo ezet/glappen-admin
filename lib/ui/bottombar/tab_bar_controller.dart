@@ -51,57 +51,42 @@ class _TabBarControllerState extends State<TabBarController> {
   BottomNavigationBar _buildBottomNavigationBar() {
     final FirebaseUser user = Provider.of(context);
     return BottomNavigationBar(
-      showUnselectedLabels: false,
-      backgroundColor: Color.fromRGBO(27, 31, 35, 1),
-      elevation: 0,
+//      showUnselectedLabels: false,
+
+//      unselectedItemColor: Theme.of(context).buttonColor,
+      selectedItemColor: Theme.of(context).buttonColor,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.drag_handle,
-            color: Colors.amber,
-          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.home),
+//          activeIcon: Icon(
+//            Icons.home,
+//          ),
           title: Text(
             'Wardrobe',
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
           ),
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.attach_money,
-            color: Colors.green,
-          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.attach_money),
           title: Text(
             'Reservations',
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
           ),
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person,
-            color: Colors.red,
-          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.person),
           title: Text(
             user.displayName,
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
           ),
         ),
         BottomNavigationBarItem(
+          backgroundColor: Theme.of(context).primaryColor,
           icon: Icon(
-            Icons.home,
-            color: Colors.amber,
+            Icons.settings,
+//            color: Colors.amber,
           ),
-          title: Text(
-            'Venue',
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
-          ),
+          title: Text('Settings'),
         ),
       ],
       currentIndex: _selectedIndex,
@@ -115,7 +100,7 @@ class _TabBarControllerState extends State<TabBarController> {
     final GladminApi api = Provider.of<GetIt>(context).get();
 
     return AppBar(
-      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
+//      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
       elevation: 0,
       title: Text(
         venue?.name ?? "",

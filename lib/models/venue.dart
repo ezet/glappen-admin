@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/wardrobe.dart';
 
 class Venue {
@@ -9,21 +11,54 @@ class Venue {
   final String logo;
   final String url;
   final CollectionReference wardrobes;
-  final DocumentReference _ref;
+  final CollectionReference reservations;
+  final DocumentReference ref;
 
-  Venue(this._ref,
-      {this.id, this.name, this.email, this.city, this.logo, this.url, this.wardrobes});
+  Venue(
+      {this.ref,
+      this.id,
+      this.name,
+      this.email,
+      this.city,
+      this.logo,
+      this.url,
+      this.wardrobes,
+      this.reservations});
+
+  static const jsonName = 'name';
+  static const jsonEmail = 'email';
+  static const jsonCity = 'city';
+  static const jsonUrl = 'url';
+  static const jsonLogo = 'logo';
+  static const jsonWardrobes = 'wardrobes';
+  static const jsonReservations = 'reservations';
 
   factory Venue.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
-    return Venue(doc.reference,
+    return Venue(
+        ref: doc.reference,
         id: doc.documentID,
-        name: data['name'] ?? '',
-        email: data['email'] ?? '',
-        city: data['city'] ?? '',
-        logo: data['logo'] ?? '',
-        url: data['url'] ?? '',
-        wardrobes: doc.reference.collection('wardrobes'));
+        name: data[jsonName] ?? '',
+        email: data[jsonEmail] ?? '',
+        city: data[jsonCity] ?? '',
+        logo: data[jsonLogo] ?? '',
+        url: data[jsonUrl] ?? '',
+        wardrobes: doc.reference.collection(jsonWardrobes),
+        reservations: doc.reference.collection(jsonReservations));
+  }
+
+  static Stream<Venue> fromReference(DocumentReference ref) {
+    return ref.snapshots().map((venue) => Venue.fromFirestore(venue));
+  }
+
+  toFirestore() {
+    return {
+      jsonName: name,
+      jsonUrl: url,
+      jsonLogo: logo,
+      jsonCity: city,
+      jsonEmail: email,
+    };
   }
 
   Stream<List<Wardrobe>> getWardrobes() {
@@ -32,7 +67,37 @@ class Venue {
         .map((list) => list.documents.map((item) => Wardrobe.fromFirestore(item)).toList());
   }
 
+  Stream<List<Reservation>> getReservations() {
+    return reservations
+        .snapshots()
+        .map((list) => list.documents.map((item) => Reservation.fromFirestore(item)).toList());
+  }
+
   Future<DocumentReference> addWardrobe(Wardrobe wardrobe) async {
     return wardrobes.add(wardrobe.toFirestore());
+  }
+
+  Future<bool> updateDetails(Venue venue) async {
+    return ref.updateData(venue.toFirestore()).then((value) => true, onError: (error) => false);
+  }
+
+  Future<bool> confirmCheckIn(CoatHanger hanger) async {
+    if (hanger.state == HangerState.CHECKING_IN) {
+      final data = Reservation.getCheckInData(hanger);
+
+      // TODO: create reservation
+      return _updateHangerState(hanger, HangerState.TAKEN);
+    } else {
+      // TODO: update reservation
+      return _updateHangerState(hanger, HangerState.AVAILABLE);
+    }
+  }
+
+  Future<bool> _updateHangerState(CoatHanger hanger, HangerState state) async {
+    return hanger.ref.setData({'stateUpdated': FieldValue.serverTimestamp(), 'state': state.index},
+        merge: true).then((value) => true, onError: (error) {
+      print(error);
+      return false;
+    });
   }
 }

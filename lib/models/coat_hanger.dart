@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/user.dart';
+import 'package:garderobeladmin/models/venue.dart';
 
 enum HangerState {
   AVAILABLE,
@@ -28,6 +29,16 @@ class CoatHanger {
       state: HangerState.values[data['state']],
       stateUpdated: data['stateUpdated'] ?? null,
     );
+  }
+
+  DocumentReference get section {
+    return ref.parent().parent();
+  }
+
+  DocumentReference _venueRef() => ref.parent().parent().parent().parent().parent().parent();
+
+  Stream<Venue> getVenue() {
+    return Venue.fromReference(_venueRef());
   }
 
   Stream<User> getUser() => user.snapshots().map((s) => User.fromFirestore(s));

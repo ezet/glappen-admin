@@ -11,7 +11,7 @@ class Wardrobe {
   static const jsonName = "name";
   static const jsonColor = "color";
   static const jsonPrice = "price";
-  static const jsonSection = "section";
+  static const jsonSection = "sections";
 
   Wardrobe({this.name, this.color, this.price, this.sections, this.ref});
 

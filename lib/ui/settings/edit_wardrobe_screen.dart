@@ -34,9 +34,7 @@ class EditWardrobeFormState extends State<EditWardrobeForm> {
           children: <Widget>[
             TextFormField(
               validator: (value) {
-                if (value.isEmpty) {
-                  return 'Enter some text';
-                }
+                if (value.isEmpty) return 'Enter some text';
                 return null;
               },
               onSaved: (val) => formData.name = val,
