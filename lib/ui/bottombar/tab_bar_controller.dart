@@ -112,14 +112,14 @@ class _TabBarControllerState extends State<TabBarController> {
           child: Row(
             children: <Widget>[Text('Scan in')],
           ),
-          onPressed: () async => {await api.simulateCheckInScan(section)},
+          onPressed: () async => {await api.simulateCheckInScan(venue, section)},
         ),
         FlatButton(
           splashColor: Colors.red,
           child: Row(
             children: <Widget>[Text('Scan out')],
           ),
-          onPressed: () async => {await api.simulateCheckOutScan(section)},
+          onPressed: () async => {await api.simulateCheckOutScan(venue, section)},
         ),
       ],
     );

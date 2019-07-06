@@ -16,20 +16,19 @@ class CoatHanger {
   final DocumentReference user;
   final Timestamp stateUpdated;
   final HangerState state;
-  final DocumentReference reservation;
 
-  CoatHanger(
-      {this.ref, this.docId, this.id, this.user, this.stateUpdated, this.state, this.reservation});
+  static const jsonId = "id";
+
+  CoatHanger({this.ref, this.docId, this.id, this.user, this.stateUpdated, this.state});
 
   factory CoatHanger.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     return CoatHanger(
       ref: doc.reference,
       docId: doc.documentID,
-      id: data['id'] ?? null,
+      id: data[jsonId] ?? null,
       user: data['user'] ?? '',
       state: HangerState.values[data['state']],
-      reservation: data['reservation'],
       stateUpdated: data['stateUpdated'] ?? null,
     );
   }

@@ -81,32 +81,31 @@ class Venue {
     return ref.updateData(venue.toFirestore()).then((value) => true, onError: (error) => false);
   }
 
-  Future<bool> handleConfirmation(CoatHanger hanger) async {
-    if (hanger.state == HangerState.CHECKING_IN) {
-      final data = Reservation.getCheckInData(hanger);
-      final reservation = await reservations.add(data);
-      return _confirmCheckIn(hanger, reservation);
-    } else {
-      hanger.reservation.updateData(Reservation.getCheckOutData(hanger));
-      return _confirmCheckOut(hanger);
-    }
+  Future<bool> handleConfirmation(Reservation reservation) async {
+//    if (reservation.state == HangerState.CHECKING_IN) {
+//      return _confirmCheckIn(hanger);
+//    } else {
+//      hanger.reservation.updateData(Reservation.getCheckOutData(hanger));
+//      return _confirmCheckOut(hanger);
+//    }
   }
 
-  Future<bool> _confirmCheckIn(CoatHanger hanger, DocumentReference reservation) async {
-    return hanger.ref.setData({
-      'stateUpdated': FieldValue.serverTimestamp(),
-      'state': HangerState.TAKEN,
-      'reservation': reservation
-    }, merge: true).then((value) => true, onError: (error) {
-      print(error);
-      return false;
-    });
+  Future<bool> _confirmCheckIn(CoatHanger hanger) async {
+//    await hanger.reservation.updateData({Reservation.jsonCheckIn: FieldValue.serverTimestamp()});
+//    return hanger.ref.setData({
+//      'stateUpdated': FieldValue.serverTimestamp(),
+//      'state': HangerState.TAKEN.index,
+//      'reservation': reservation
+//    }, merge: true).then((value) => true, onError: (error) {
+//      print(error);
+//      return false;
+//    });
   }
 
   Future<bool> _confirmCheckOut(CoatHanger hanger) async {
     return hanger.ref.setData({
       'stateUpdated': FieldValue.serverTimestamp(),
-      'state': HangerState.AVAILABLE,
+      'state': HangerState.AVAILABLE.index,
       'reservation': null,
       'user': null
     }, merge: true).then((value) => true, onError: (error) {

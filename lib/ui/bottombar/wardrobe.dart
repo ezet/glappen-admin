@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
-import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
 import 'package:garderobeladmin/ui/profile.dart';
@@ -15,8 +15,8 @@ class WardrobeQueueScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final section = Provider.of<Section>(context);
 
-    return StreamProvider<List<CoatHanger>>.value(
-        value: section?.getHangers(), child: CoatHangerList());
+    return StreamProvider<List<Reservation>>.value(
+        value: section?.getReservations(), child: CoatHangerList());
   }
 }
 
@@ -29,7 +29,7 @@ class CoatHangerList extends StatelessWidget {
   Widget build(BuildContext context) {
     final api = Provider.of<GetIt>(context).get<GladminApi>();
 
-    var hangers = Provider.of<List<CoatHanger>>(context);
+    var hangers = Provider.of<List<Reservation>>(context);
     if (hangers == null) {
       return Center(
         child: CircularProgressIndicator(),
@@ -54,7 +54,7 @@ class CoatHangerList extends StatelessWidget {
   }
 
   Container buildCheckInItem(
-      BuildContext context, List<CoatHanger> hangers, int i, GladminApi api) {
+      BuildContext context, List<Reservation> hangers, int i, GladminApi api) {
     final venue = Provider.of<Venue>(context);
     return Container(
       height: 110,
@@ -94,7 +94,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(255, 75, 75, 1),
                   onTap: () async {
-                    var result = await api.rejectUpdate(hangers[i]);
+//                    var result = await api.rejectUpdate(hangers[i]);
                   },
                   child: Container(
                     child: Center(
@@ -136,27 +136,25 @@ class CoatHangerList extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      hangers[i].id.toString(),
+                      hangers[i].hangerName ?? "",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
                       ),
                     ),
-                    StreamBuilder<User>(
-                        stream: hangers[i].getUser(),
-                        builder: (context, userSnapshot) => InkWell(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Profile(userSnapshot.data.docId))),
-                              child: Text(
-                                userSnapshot.data?.name ?? "",
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ))
+                    InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Profile(hangers[i].user.documentID))),
+                      child: Text(
+                        hangers[i].userName ?? "",
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

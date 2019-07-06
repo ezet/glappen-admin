@@ -3,17 +3,19 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/device.dart';
+import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/user.dart';
+import 'package:garderobeladmin/models/venue.dart';
 
 abstract class GladminApi {
   Future<bool> confirmUpdate(CoatHanger hanger);
 
   Future<bool> rejectUpdate(CoatHanger hanger);
 
-  Future simulateCheckInScan(Section section);
+  Future simulateCheckInScan(Venue venue, Section section);
 
-  Future simulateCheckOutScan(Section section);
+  Future simulateCheckOutScan(Venue venue, Section section);
 
   Stream<Device> getDevice(String deviceId);
 
@@ -69,32 +71,48 @@ class LocalGladminApi implements GladminApi {
   }
 
   @override
-  simulateCheckInScan(Section section) async {
+  simulateCheckInScan(Venue venue, Section section) async {
     final hangers = await section.hangers
-        .where('state', isEqualTo: HangerState.AVAILABLE)
+        .where('state', isEqualTo: HangerState.AVAILABLE.index)
         .limit(1)
         .getDocuments();
+    DocumentReference hangerRef;
     if (hangers.documents.isEmpty) {
-      section.hangers.add({
+      hangerRef = await section.hangers.add({
         'id': Random().nextInt(9999).toString(),
         'state': HangerState.CHECKING_IN.index,
         'stateUpdated': FieldValue.serverTimestamp(),
         'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
       });
     } else {
-      final hanger = hangers.documents.first;
-      hanger.reference.updateData({
+      hangerRef = hangers.documents.first.reference;
+      hangerRef.setData({
         'state': HangerState.CHECKING_IN.index,
         'stateUpdated': FieldValue.serverTimestamp(),
         'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
-      });
+      }, merge: true);
     }
+
+    final userRef = _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1');
+
+    final hangerName = await hangerRef.get().then((item) => item.data[CoatHanger.jsonId]);
+    final userName = await userRef.get().then((item) => item.data[User.jsonName]);
+
+    await venue.reservations.add({
+      Reservation.jsonSection: section.ref,
+      Reservation.jsonHanger: hangerRef,
+      Reservation.jsonHangerName: hangerName,
+      Reservation.jsonUser: userRef,
+      Reservation.jsonReservationTime: FieldValue.serverTimestamp(),
+    });
   }
 
   @override
-  simulateCheckOutScan(Section section) async {
-    final hangers =
-        await section.hangers.where('state', isEqualTo: HangerState.TAKEN).limit(1).getDocuments();
+  simulateCheckOutScan(Venue venue, Section section) async {
+    final hangers = await section.hangers
+        .where('state', isEqualTo: HangerState.TAKEN.index)
+        .limit(1)
+        .getDocuments();
     if (hangers.documents.isNotEmpty) {
       final hanger = hangers.documents.first;
       hanger.reference.updateData({
