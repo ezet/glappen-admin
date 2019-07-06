@@ -21,7 +21,6 @@ class Section {
 
   Stream<List<CoatHanger>> getHangers() {
     return hangers
-        .where('state', isGreaterThanOrEqualTo: HangerState.CHECKING_OUT.index)
         .orderBy('state')
         .orderBy('stateUpdated')
         .snapshots()
@@ -33,7 +32,7 @@ class Section {
   Stream<List<Reservation>> getReservations() {
     return venueRef
         .collection(Venue.jsonReservations)
-//        .where('state', isGreaterThanOrEqualTo: HangerState.CHECKING_OUT.index)
+        .where(Reservation.jsonState, isGreaterThanOrEqualTo: ReservationState.CHECKING_OUT.index)
 //        .orderBy('state')
 //        .orderBy('stateUpdated')
         .snapshots()

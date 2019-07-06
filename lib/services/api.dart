@@ -9,10 +9,6 @@ import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/models/venue.dart';
 
 abstract class GladminApi {
-  Future<bool> confirmUpdate(CoatHanger hanger);
-
-  Future<bool> rejectUpdate(CoatHanger hanger);
-
   Future simulateCheckInScan(Venue venue, Section section);
 
   Future simulateCheckOutScan(Venue venue, Section section);
@@ -40,28 +36,6 @@ class LocalGladminApi implements GladminApi {
     return ref.snapshots().map((snapshot) => User.fromFirestore(snapshot));
   }
 
-  @override
-  confirmUpdate(CoatHanger hanger) async {
-    if (hanger.state == HangerState.CHECKING_IN) {
-      // TODO: create reservation
-      return _updateHangerState(hanger, HangerState.TAKEN);
-    } else {
-      // TODO: update reservation
-      return _updateHangerState(hanger, HangerState.AVAILABLE);
-    }
-  }
-
-  @override
-  rejectUpdate(CoatHanger hanger) async {
-    // TODO: update reservation
-    if (hanger.state == HangerState.CHECKING_IN) {
-//      hanger.createReservation();
-      return _updateHangerState(hanger, HangerState.AVAILABLE);
-    } else {
-      return _updateHangerState(hanger, HangerState.TAKEN);
-    }
-  }
-
   Future<bool> _updateHangerState(CoatHanger hanger, HangerState state) async {
     return hanger.ref.setData({'stateUpdated': FieldValue.serverTimestamp(), 'state': state.index},
         merge: true).then((value) => true, onError: (error) {
@@ -80,16 +54,15 @@ class LocalGladminApi implements GladminApi {
     if (hangers.documents.isEmpty) {
       hangerRef = await section.hangers.add({
         'id': Random().nextInt(9999).toString(),
-        'state': HangerState.CHECKING_IN.index,
+        'state': HangerState.UNAVAILABLE.index,
         'stateUpdated': FieldValue.serverTimestamp(),
         'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
       });
     } else {
       hangerRef = hangers.documents.first.reference;
       hangerRef.setData({
-        'state': HangerState.CHECKING_IN.index,
+        'state': HangerState.UNAVAILABLE.index,
         'stateUpdated': FieldValue.serverTimestamp(),
-        'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
       }, merge: true);
     }
 
@@ -103,6 +76,8 @@ class LocalGladminApi implements GladminApi {
       Reservation.jsonHanger: hangerRef,
       Reservation.jsonHangerName: hangerName,
       Reservation.jsonUser: userRef,
+      Reservation.jsonUserName: userName,
+      Reservation.jsonState: ReservationState.CHECKING_IN.index,
       Reservation.jsonReservationTime: FieldValue.serverTimestamp(),
     });
   }
@@ -110,13 +85,13 @@ class LocalGladminApi implements GladminApi {
   @override
   simulateCheckOutScan(Venue venue, Section section) async {
     final hangers = await section.hangers
-        .where('state', isEqualTo: HangerState.TAKEN.index)
+        .where('state', isEqualTo: HangerState.UNAVAILABLE.index)
         .limit(1)
         .getDocuments();
     if (hangers.documents.isNotEmpty) {
       final hanger = hangers.documents.first;
       hanger.reference.updateData({
-        'state': HangerState.CHECKING_OUT.index,
+        'state': HangerState.AVAILABLE.index,
         'stateUpdated': FieldValue.serverTimestamp(),
       });
     }

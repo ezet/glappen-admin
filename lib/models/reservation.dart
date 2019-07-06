@@ -1,6 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/user.dart';
+import 'package:meta/meta.dart';
+
+enum ReservationState {
+  AVAILABLE,
+  TAKEN,
+  CHECKING_OUT,
+  CHECKING_IN,
+}
 
 class Reservation {
   final DocumentReference ref;
@@ -10,13 +18,15 @@ class Reservation {
   final Timestamp checkIn;
   final Timestamp checkOut;
   final Timestamp reservationTime;
-  final HangerState state;
+  final Timestamp stateUpdated;
+  final ReservationState state;
   final DocumentReference hanger;
   final DocumentReference section;
   final DocumentReference user;
   final DocumentReference payment;
 
   static const jsonReservationTime = 'reservationTime';
+  static const jsonStateUpdated = 'stateUpdated';
   static const jsonCheckIn = 'checkedIn';
   static const jsonCheckOut = 'checkedOut';
   static const jsonHanger = 'hanger';
@@ -28,30 +38,34 @@ class Reservation {
   static const jsonState = 'state';
 
   Reservation(
-      {this.ref,
-      this.docId,
-      this.checkIn,
-      this.checkOut,
-      this.reservationTime,
-      this.hanger,
-      this.hangerName,
-      this.section,
-      this.userName,
-      this.user,
-      this.state,
-      this.payment});
+      {@required this.ref,
+      @required this.docId,
+      @required this.checkIn,
+      @required this.checkOut,
+      @required this.reservationTime,
+      @required this.hanger,
+      @required this.hangerName,
+      @required this.section,
+      @required this.userName,
+      @required this.user,
+      @required this.state,
+      @required this.stateUpdated,
+      @required this.payment});
 
   factory Reservation.fromFirestore(DocumentSnapshot ds) {
     final data = ds.data;
     return Reservation(
+        ref: ds.reference,
         docId: ds.documentID,
         checkIn: data[jsonCheckIn],
         checkOut: data[jsonCheckOut],
-        state: HangerState.values[data[jsonState] ?? 1],
+        stateUpdated: data[jsonStateUpdated],
+        state: ReservationState.values[data[jsonState] ?? 1],
         reservationTime: data[jsonReservationTime],
         hanger: data[jsonHanger],
         section: data[jsonSection],
         user: data[jsonUser],
+        userName: data[jsonUserName],
         hangerName: data[jsonHangerName],
         payment: data[jsonPayment]);
   }

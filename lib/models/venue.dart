@@ -81,20 +81,24 @@ class Venue {
     return ref.updateData(venue.toFirestore()).then((value) => true, onError: (error) => false);
   }
 
-  Future<bool> handleConfirmation(Reservation reservation) async {
-//    if (reservation.state == HangerState.CHECKING_IN) {
-//      return _confirmCheckIn(hanger);
-//    } else {
+  Future<void> handleConfirmation(Reservation reservation) async {
+    if (reservation.state == ReservationState.CHECKING_IN) {
+      return _confirmCheckIn(reservation);
+    } else {
 //      hanger.reservation.updateData(Reservation.getCheckOutData(hanger));
 //      return _confirmCheckOut(hanger);
-//    }
+    }
   }
 
-  Future<bool> _confirmCheckIn(CoatHanger hanger) async {
-//    await hanger.reservation.updateData({Reservation.jsonCheckIn: FieldValue.serverTimestamp()});
-//    return hanger.ref.setData({
+  Future<void> _confirmCheckIn(Reservation reservation) async {
+    return reservation.ref.updateData({
+      Reservation.jsonCheckIn: FieldValue.serverTimestamp(),
+      Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
+      Reservation.jsonState: ReservationState.TAKEN.index,
+    });
+//    return reservation.ref.setData({
 //      'stateUpdated': FieldValue.serverTimestamp(),
-//      'state': HangerState.TAKEN.index,
+//      'state': HangerState.UNAVAILABLE.index,
 //      'reservation': reservation
 //    }, merge: true).then((value) => true, onError: (error) {
 //      print(error);

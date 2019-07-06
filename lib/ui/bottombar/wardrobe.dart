@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
@@ -29,32 +28,32 @@ class CoatHangerList extends StatelessWidget {
   Widget build(BuildContext context) {
     final api = Provider.of<GetIt>(context).get<GladminApi>();
 
-    var hangers = Provider.of<List<Reservation>>(context);
-    if (hangers == null) {
+    var reservations = Provider.of<List<Reservation>>(context);
+    if (reservations == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
     return ListView.separated(
       padding: EdgeInsets.all(10),
-      itemCount: hangers.length,
+      itemCount: reservations.length,
       separatorBuilder: (BuildContext context, int index) => Divider(
             height: 30,
             color: Colors.transparent,
           ),
       itemBuilder: (context, i) {
-        if (hangers[i].state == HangerState.CHECKING_IN) {
-          return buildCheckInItem(context, hangers, i, api);
+        if (reservations[i].state == ReservationState.CHECKING_IN) {
+          return buildCheckInItem(context, reservations, i, api);
         } else {
           // TODO: implement check-out layout
-          return buildCheckInItem(context, hangers, i, api);
+          return buildCheckInItem(context, reservations, i, api);
         }
       },
     );
   }
 
   Container buildCheckInItem(
-      BuildContext context, List<Reservation> hangers, int i, GladminApi api) {
+      BuildContext context, List<Reservation> reservations, int i, GladminApi api) {
     final venue = Provider.of<Venue>(context);
     return Container(
       height: 110,
@@ -129,14 +128,14 @@ class CoatHangerList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
-                      hangers[i].state == HangerState.CHECKING_OUT ? "OUT" : "IN",
+                      reservations[i].state == ReservationState.CHECKING_OUT ? "OUT" : "IN",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
                       ),
                     ),
                     Text(
-                      hangers[i].hangerName ?? "",
+                      reservations[i].hangerName ?? "",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
@@ -146,9 +145,9 @@ class CoatHangerList extends StatelessWidget {
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Profile(hangers[i].user.documentID))),
+                              builder: (context) => Profile(reservations[i].user.documentID))),
                       child: Text(
-                        hangers[i].userName ?? "",
+                        reservations[i].userName ?? "",
                         maxLines: 1,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -179,7 +178,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
-                    venue.handleConfirmation(hangers[i]);
+                    venue.handleConfirmation(reservations[i]);
 //                    var result = await api.confirmUpdate(hangers[i]);
                   },
                   child: Container(

@@ -4,9 +4,7 @@ import 'package:garderobeladmin/models/venue.dart';
 
 enum HangerState {
   AVAILABLE,
-  TAKEN,
-  CHECKING_OUT,
-  CHECKING_IN,
+  UNAVAILABLE,
 }
 
 class CoatHanger {
