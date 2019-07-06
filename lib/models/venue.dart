@@ -129,7 +129,7 @@ class Venue {
     await reservation.ref.updateData({
       Reservation.jsonCheckOut: FieldValue.serverTimestamp(),
       Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-      Reservation.jsonState: ReservationState.CHECKED_IN.index,
+      Reservation.jsonState: ReservationState.CHECKED_OUT.index,
     });
 
     return reservation.hanger.updateData({

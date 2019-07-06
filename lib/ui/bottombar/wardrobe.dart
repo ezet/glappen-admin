@@ -47,7 +47,7 @@ class CoatHangerList extends StatelessWidget {
                 ),
             itemBuilder: (context, i) {
               if (reservations[i].state == ReservationState.CHECKING_IN) {
-                return _buildCheckInItem(context, reservations, i, api);
+                return _buildCheckOutItem(context, reservations, i, api);
               } else {
                 return _buildCheckOutItem(context, reservations, i, api);
               }
@@ -65,7 +65,7 @@ class CoatHangerList extends StatelessWidget {
   }
 
   Container _buildCheckInItem(
-      BuildContext context, List<CoatHanger> hangers, int i, GladminApi api) {
+      BuildContext context, List<Reservation> hangers, int i, GladminApi api) {
     return Container(
       decoration: BoxDecoration(
         color: Color.fromRGBO(47, 51, 54, 1),
@@ -92,10 +92,8 @@ class CoatHangerList extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular(15.0),
         ),
-        border: Border.all(
-            color: Color.fromRGBO(66, 74, 82, 1),
-            width: 1.0,
-            style: BorderStyle.solid),
+        border:
+            Border.all(color: Color.fromRGBO(66, 74, 82, 1), width: 1.0, style: BorderStyle.solid),
         /*boxShadow: [
           BoxShadow(
             color: Color.fromRGBO(0, 147, 255, .10),
@@ -122,37 +120,34 @@ class CoatHangerList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  /*Text(
-                    hangers[i].state == HangerState.CHECKING_OUT ? "OUT" : "IN",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),
-                  ),*/
                   Text(
-                    hangers[i].id.toString(),
+                    reservations[i].state == ReservationState.CHECKING_OUT ? "OUT" : "IN",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
                     ),
                   ),
-                  StreamBuilder<User>(
-                      stream: hangers[i].getUser(),
-                      builder: (context, userSnapshot) => InkWell(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        Profile(userSnapshot.data.docId))),
-                            child: Text(
-                              userSnapshot.data?.name ?? "",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ))
+                  Text(
+                    reservations[i].hangerName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Profile(reservations[i].user.documentID))),
+                    child: Text(
+                      reservations[i].userName ?? "",
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

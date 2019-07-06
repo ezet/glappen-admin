@@ -85,13 +85,13 @@ class LocalGladminApi implements GladminApi {
   @override
   simulateCheckOutScan(Venue venue, Section section) async {
     final reservations = await venue.reservations
-//        .where(Reservation.jsonSection, isEqualTo: section.ref)
+        .where(Reservation.jsonSection, isEqualTo: section.ref)
         .where(Reservation.jsonState, isEqualTo: ReservationState.CHECKED_IN.index)
         .getDocuments();
     if (reservations.documents.isEmpty) {
       return Future(() => false);
     }
-    reservations.documents.first.reference.updateData({
+    await reservations.documents.first.reference.updateData({
       Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
       Reservation.jsonState: ReservationState.CHECKING_OUT.index
     });
