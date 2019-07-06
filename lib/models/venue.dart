@@ -81,12 +81,29 @@ class Venue {
     return ref.updateData(venue.toFirestore()).then((value) => true, onError: (error) => false);
   }
 
+  Future<void> handleRejection(Reservation reservation) async {
+    if (reservation.state == ReservationState.CHECKING_IN) {
+      await reservation.ref.updateData({
+        Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
+        Reservation.jsonState: ReservationState.AVAILABLE.index,
+      });
+      return reservation.hanger.updateData({
+        CoatHanger.jsonState: HangerState.AVAILABLE.index,
+        CoatHanger.jsonStateUpdated: FieldValue.serverTimestamp()
+      });
+    } else {
+      return reservation.ref.updateData({
+        Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
+        Reservation.jsonState: ReservationState.TAKEN.index,
+      });
+    }
+  }
+
   Future<void> handleConfirmation(Reservation reservation) async {
     if (reservation.state == ReservationState.CHECKING_IN) {
       return _confirmCheckIn(reservation);
     } else {
-//      hanger.reservation.updateData(Reservation.getCheckOutData(hanger));
-//      return _confirmCheckOut(hanger);
+      return _confirmCheckOut(reservation);
     }
   }
 
@@ -106,13 +123,17 @@ class Venue {
 //    });
   }
 
-  Future<bool> _confirmCheckOut(CoatHanger hanger) async {
-    return hanger.ref.setData({
-      'stateUpdated': FieldValue.serverTimestamp(),
-      'state': HangerState.AVAILABLE.index,
-      'reservation': null,
-      'user': null
-    }, merge: true).then((value) => true, onError: (error) {
+  Future<void> _confirmCheckOut(Reservation reservation) async {
+    await reservation.ref.updateData({
+      Reservation.jsonCheckOut: FieldValue.serverTimestamp(),
+      Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
+      Reservation.jsonState: ReservationState.AVAILABLE.index,
+    });
+
+    return reservation.hanger.updateData({
+      CoatHanger.jsonStateUpdated: FieldValue.serverTimestamp(),
+      CoatHanger.jsonState: HangerState.AVAILABLE.index,
+    }).then((value) => true, onError: (error) {
       print(error);
       return false;
     });

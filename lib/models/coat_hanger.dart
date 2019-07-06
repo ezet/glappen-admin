@@ -16,6 +16,9 @@ class CoatHanger {
   final HangerState state;
 
   static const jsonId = "id";
+  static const jsonUser = 'user';
+  static const jsonStateUpdated = 'stateUpdated';
+  static const jsonState = 'state';
 
   CoatHanger({this.ref, this.docId, this.id, this.user, this.stateUpdated, this.state});
 
@@ -25,9 +28,9 @@ class CoatHanger {
       ref: doc.reference,
       docId: doc.documentID,
       id: data[jsonId] ?? null,
-      user: data['user'] ?? '',
-      state: HangerState.values[data['state']],
-      stateUpdated: data['stateUpdated'] ?? null,
+      user: data[jsonUser] ?? '',
+      state: HangerState.values[data[jsonState]],
+      stateUpdated: data[jsonStateUpdated] ?? null,
     );
   }
 
