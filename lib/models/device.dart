@@ -17,6 +17,6 @@ class Device {
   }
 
   Stream<Venue> getVenue() {
-    return venue.snapshots().map((venue) => Venue.fromFirestore(venue));
+    return Venue.fromReference(venue);
   }
 }

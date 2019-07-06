@@ -1,27 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garderobeladmin/models/reservation.dart';
+import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/models/wardrobe.dart';
 
 import 'coat_hanger.dart';
 
 class Section {
+  final DocumentReference ref;
   final String docId;
+  final String name;
   final CollectionReference hangers;
   final DocumentReference wardrobe;
 
-  Section(this.docId, this.hangers, this.wardrobe);
+  Section(this.ref, this.docId, this.name, this.hangers, this.wardrobe);
 
   factory Section.fromFirestore(DocumentSnapshot doc) {
-    return Section(
-        doc.documentID, doc.reference.collection('hangers'), doc.reference.parent().parent());
+    return Section(doc.reference, doc.documentID, doc.data['name'],
+        doc.reference.collection('hangers'), doc.reference.parent().parent());
   }
 
   Stream<List<CoatHanger>> getHangers() {
     return hangers
-        .where('state', isGreaterThanOrEqualTo: HangerState.CHECKING_OUT.index)
         .orderBy('state')
         .orderBy('stateUpdated')
         .snapshots()
         .map((list) => list.documents.map((doc) => CoatHanger.fromFirestore(doc)).toList());
+  }
+
+  DocumentReference get venueRef => ref.parent().parent().parent().parent();
+
+  Stream<List<Reservation>> getReservations() {
+    return venueRef
+        .collection(Venue.jsonReservations)
+        .where(Reservation.jsonState, isGreaterThanOrEqualTo: ReservationState.CHECKING_OUT.index)
+//        .orderBy('state')
+//        .orderBy('stateUpdated')
+        .snapshots()
+        .handleError(() => print("error"))
+        .map((list) => list.documents.map((doc) => Reservation.fromFirestore(doc)).toList());
   }
 
   Stream<List<CoatHanger>> getCheckingIn() {

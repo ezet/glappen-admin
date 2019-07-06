@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:garderobeladmin/models/coat_hanger.dart';
+import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
-import 'package:garderobeladmin/models/user.dart';
+import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
 import 'package:garderobeladmin/ui/profile.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class Wardrobe extends StatelessWidget {
-  const Wardrobe({Key key}) : super(key: key);
+class WardrobeQueueScreen extends StatelessWidget {
+  const WardrobeQueueScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final section = Provider.of<Section>(context);
 
-    return StreamProvider<List<CoatHanger>>.value(
-        value: section?.getHangers(), child: CoatHangerList());
+    return StreamProvider<List<Reservation>>.value(
+        value: section?.getReservations(), child: CoatHangerList());
   }
 }
 
@@ -28,8 +28,8 @@ class CoatHangerList extends StatelessWidget {
   Widget build(BuildContext context) {
     final api = Provider.of<GetIt>(context).get<GladminApi>();
 
-    var hangers = Provider.of<List<CoatHanger>>(context);
-    if (hangers == null) {
+    var reservations = Provider.of<List<Reservation>>(context);
+    if (reservations == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -40,16 +40,16 @@ class CoatHangerList extends StatelessWidget {
           flex: 3,
           child: ListView.separated(
             padding: EdgeInsets.all(10),
-            itemCount: hangers.length,
+            itemCount: reservations.length,
             separatorBuilder: (BuildContext context, int index) => Divider(
                   height: 20,
                   color: Colors.transparent,
                 ),
             itemBuilder: (context, i) {
-              if (hangers[i].state == HangerState.CHECKING_IN) {
-                return _buildCheckInItem(context, hangers, i, api);
+              if (reservations[i].state == ReservationState.CHECKING_IN) {
+                return _buildCheckInItem(context, reservations, i, api);
               } else {
-                return _buildCheckOutItem(context, hangers, i, api);
+                return _buildCheckOutItem(context, reservations, i, api);
               }
             },
           ),
@@ -83,7 +83,8 @@ class CoatHangerList extends StatelessWidget {
   }
 
   Container _buildCheckOutItem(
-      BuildContext context, List<CoatHanger> hangers, int i, GladminApi api) {
+      BuildContext context, List<Reservation> reservations, int i, GladminApi api) {
+    final venue = Provider.of<Venue>(context);
     return Container(
       height: 110,
       decoration: BoxDecoration(
@@ -175,7 +176,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
-                    var result = await api.confirmUpdate(hangers[i]);
+                    venue.handleConfirmation(reservations[i]);
                   },
                   child: Container(
                     child: Center(

@@ -15,13 +15,17 @@ class User {
     this.employeeId,
   });
 
+  static const jsonName = "name";
+  static const jsonEmail = "email";
+  static const jsonPhone = "phone";
+
   factory User.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     return User(
       docId: doc.documentID,
-      name: data['name'] ?? '',
-      email: data['email'] ?? '',
-      phone: data['phone'] ?? '',
+      name: data[jsonName] ?? '',
+      email: data[jsonName] ?? '',
+      phone: data[jsonPhone] ?? '',
       employeeId: data['employeeId'] ?? '',
     );
   }

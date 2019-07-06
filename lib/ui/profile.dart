@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:garderobeladmin/data/db.dart';
 import 'package:garderobeladmin/models/user.dart';
+import 'package:garderobeladmin/services/api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,7 @@ class Profile extends StatelessWidget {
   Profile(this._userId);
 
   Widget build(BuildContext context) {
-    final DatabaseService db = Provider.of<GetIt>(context, listen: false).get();
+    final GladminApi db = Provider.of<GetIt>(context).get();
     return StreamBuilder(
         stream: db.getUser(_userId), builder: (context, ss) => ProfileData(ss.data));
   }

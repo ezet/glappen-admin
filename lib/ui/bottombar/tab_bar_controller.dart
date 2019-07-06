@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/ui/bottombar/employees.dart';
+import 'package:garderobeladmin/ui/bottombar/reservations.dart';
+import 'package:garderobeladmin/ui/bottombar/venue_settings_view.dart';
+import 'package:garderobeladmin/ui/bottombar/wardrobe.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-
-import 'employees.dart';
-import 'wardrobe.dart';
 
 class TabBarController extends StatefulWidget {
   TabBarController();
@@ -22,9 +23,10 @@ class _TabBarControllerState extends State<TabBarController> {
   int _selectedIndex = 0;
 
   static const List<Widget> _tabs = <Widget>[
-    Wardrobe(),
-    Wardrobe(),
+    WardrobeQueueScreen(),
+    Reservations(),
     Employees(),
+    VenueSettingsView()
   ];
 
   void _onItemTapped(int index) {
@@ -49,46 +51,43 @@ class _TabBarControllerState extends State<TabBarController> {
   BottomNavigationBar _buildBottomNavigationBar() {
     final FirebaseUser user = Provider.of(context);
     return BottomNavigationBar(
-      showUnselectedLabels: false,
-      backgroundColor: Color.fromRGBO(27, 31, 35, 1),
-      elevation: 0,
+//      showUnselectedLabels: false,
+
+//      unselectedItemColor: Theme.of(context).buttonColor,
+      selectedItemColor: Theme.of(context).buttonColor,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home,
-            color: Colors.amber,
-          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.home),
+//          activeIcon: Icon(
+//            Icons.home,
+//          ),
           title: Text(
             'Wardrobe',
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
           ),
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.attach_money,
-            color: Colors.green,
-          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.attach_money),
           title: Text(
-            'Reports',
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
+            'Reservations',
           ),
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person,
-            color: Colors.red,
-          ),
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(Icons.person),
           title: Text(
             user.displayName,
-            style: TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-            ),
           ),
-        )
+        ),
+        BottomNavigationBarItem(
+          backgroundColor: Theme.of(context).primaryColor,
+          icon: Icon(
+            Icons.settings,
+//            color: Colors.amber,
+          ),
+          title: Text('Settings'),
+        ),
       ],
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
@@ -101,7 +100,7 @@ class _TabBarControllerState extends State<TabBarController> {
     final GladminApi api = Provider.of<GetIt>(context).get();
 
     return AppBar(
-      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
+//      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
       elevation: 0,
       title: Text(
         venue?.name ?? "",
@@ -113,14 +112,14 @@ class _TabBarControllerState extends State<TabBarController> {
           child: Row(
             children: <Widget>[Text('Scan in')],
           ),
-          onPressed: () async => {await api.simulateCheckInScan(section)},
+          onPressed: () async => {await api.simulateCheckInScan(venue, section)},
         ),
         FlatButton(
           splashColor: Colors.red,
           child: Row(
             children: <Widget>[Text('Scan out')],
           ),
-          onPressed: () async => {await api.simulateCheckOutScan(section)},
+          onPressed: () async => {await api.simulateCheckOutScan(venue, section)},
         ),
       ],
     );
