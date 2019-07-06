@@ -85,7 +85,7 @@ class Venue {
     if (reservation.state == ReservationState.CHECKING_IN) {
       await reservation.ref.updateData({
         Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-        Reservation.jsonState: ReservationState.AVAILABLE.index,
+        Reservation.jsonState: ReservationState.CHECK_IN_REJECTED.index,
       });
       return reservation.hanger.updateData({
         CoatHanger.jsonState: HangerState.AVAILABLE.index,
@@ -94,7 +94,7 @@ class Venue {
     } else {
       return reservation.ref.updateData({
         Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-        Reservation.jsonState: ReservationState.TAKEN.index,
+        Reservation.jsonState: ReservationState.CHECKED_IN.index,
       });
     }
   }
@@ -102,8 +102,10 @@ class Venue {
   Future<void> handleConfirmation(Reservation reservation) async {
     if (reservation.state == ReservationState.CHECKING_IN) {
       return _confirmCheckIn(reservation);
-    } else {
+    } else if (reservation.state == ReservationState.CHECKING_OUT) {
       return _confirmCheckOut(reservation);
+    } else {
+      throw "Invalid reservation state: ${reservation.state}";
     }
   }
 
@@ -111,7 +113,7 @@ class Venue {
     return reservation.ref.updateData({
       Reservation.jsonCheckIn: FieldValue.serverTimestamp(),
       Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-      Reservation.jsonState: ReservationState.TAKEN.index,
+      Reservation.jsonState: ReservationState.CHECKED_IN.index,
     });
 //    return reservation.ref.setData({
 //      'stateUpdated': FieldValue.serverTimestamp(),
@@ -127,7 +129,7 @@ class Venue {
     await reservation.ref.updateData({
       Reservation.jsonCheckOut: FieldValue.serverTimestamp(),
       Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-      Reservation.jsonState: ReservationState.AVAILABLE.index,
+      Reservation.jsonState: ReservationState.CHECKED_IN.index,
     });
 
     return reservation.hanger.updateData({

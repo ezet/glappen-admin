@@ -4,8 +4,9 @@ import 'package:garderobeladmin/models/user.dart';
 import 'package:meta/meta.dart';
 
 enum ReservationState {
-  AVAILABLE,
-  TAKEN,
+  CHECK_IN_REJECTED,
+  CHECKED_OUT,
+  CHECKED_IN,
   CHECKING_OUT,
   CHECKING_IN,
 }
