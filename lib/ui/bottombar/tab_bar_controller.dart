@@ -67,9 +67,9 @@ class _TabBarControllerState extends State<TabBarController> {
         ),
         BottomNavigationBarItem(
           backgroundColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.attach_money),
+          icon: Icon(Icons.history),
           title: Text(
-            'Reservations',
+            'History',
           ),
         ),
         BottomNavigationBarItem(
