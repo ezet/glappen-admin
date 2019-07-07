@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import 'models/device.dart';
 import 'models/section.dart';
+import 'models/user.dart';
 import 'models/venue.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
@@ -78,6 +79,15 @@ class _AuthenticatorState extends State<Authenticator> {
     if (_currentUser == null) {
       return SignIn();
     } else {
+      final api = Provider.of<GetIt>(context).get<GladminApi>();
+      final user = User(
+          docId: _currentUser.uid,
+          name: _currentUser.displayName,
+          email: _currentUser.email,
+          phone: _currentUser.phoneNumber,
+          photoUrl: _currentUser.photoUrl);
+      api.updateUser(user);
+
       return TabBarController();
     }
   }

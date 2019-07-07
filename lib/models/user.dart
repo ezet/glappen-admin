@@ -5,19 +5,20 @@ class User {
   final String name;
   final String email;
   final String phone;
-  final String employeeId;
+  final String photoUrl;
 
   User({
     this.docId,
     this.name,
     this.email,
     this.phone,
-    this.employeeId,
+    this.photoUrl,
   });
 
   static const jsonName = "name";
   static const jsonEmail = "email";
   static const jsonPhone = "phone";
+  static const jsonPhotoUrl = "photoUrl";
 
   factory User.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
@@ -26,7 +27,7 @@ class User {
       name: data[jsonName] ?? '',
       email: data[jsonName] ?? '',
       phone: data[jsonPhone] ?? '',
-      employeeId: data['employeeId'] ?? '',
+      photoUrl: data[jsonPhotoUrl] ?? '',
     );
   }
 }

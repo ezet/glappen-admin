@@ -16,9 +16,13 @@ abstract class GladminApi {
   Stream<Device> getDevice(String deviceId);
 
   Stream<User> getUser(String userId);
+
+  void updateUser(User user);
 }
 
 class LocalGladminApi implements GladminApi {
+  static const pathUsers = 'users';
+
   LocalGladminApi(this._db);
 
   // ignore: unused_field
@@ -95,5 +99,19 @@ class LocalGladminApi implements GladminApi {
       Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
       Reservation.jsonState: ReservationState.CHECKING_OUT.index
     });
+  }
+
+  @override
+  void updateUser(User user) async {
+    return _db.collection(pathUsers).document(user.docId).setData(toFirebase(user), merge: true);
+  }
+
+  Map<String, dynamic> toFirebase(User user) {
+    return {
+      User.jsonPhotoUrl: user.photoUrl,
+      User.jsonPhone: user.phone,
+      User.jsonName: user.name,
+      User.jsonEmail: user.email
+    };
   }
 }
