@@ -49,7 +49,6 @@ class _TabBarControllerState extends State<TabBarController> {
   }
 
   BottomNavigationBar _buildBottomNavigationBar() {
-    final FirebaseUser user = Provider.of(context);
     return BottomNavigationBar(
 //      showUnselectedLabels: false,
 
@@ -77,7 +76,7 @@ class _TabBarControllerState extends State<TabBarController> {
           backgroundColor: Theme.of(context).primaryColor,
           icon: Icon(Icons.person),
           title: Text(
-            user.displayName,
+            "Profile",
           ),
         ),
         BottomNavigationBarItem(
@@ -98,6 +97,7 @@ class _TabBarControllerState extends State<TabBarController> {
     final Venue venue = Provider.of(context);
     final Section section = Provider.of(context);
     final GladminApi api = Provider.of<GetIt>(context).get();
+    final user = Provider.of<FirebaseUser>(context);
 
     return AppBar(
 //      backgroundColor: Color.fromRGBO(34, 38, 43, 1),
@@ -112,14 +112,14 @@ class _TabBarControllerState extends State<TabBarController> {
           child: Row(
             children: <Widget>[Text('Scan in')],
           ),
-          onPressed: () async => {await api.simulateCheckInScan(venue, section)},
+          onPressed: () async => {await api.simulateCheckInScan(venue, section, user)},
         ),
         FlatButton(
           splashColor: Colors.red,
           child: Row(
             children: <Widget>[Text('Scan out')],
           ),
-          onPressed: () async => {await api.simulateCheckOutScan(venue, section)},
+          onPressed: () async => {await api.simulateCheckOutScan(venue, section, user)},
         ),
       ],
     );

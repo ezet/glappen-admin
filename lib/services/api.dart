@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
 import 'package:garderobeladmin/models/device.dart';
 import 'package:garderobeladmin/models/reservation.dart';
@@ -9,9 +10,9 @@ import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/models/venue.dart';
 
 abstract class GladminApi {
-  Future simulateCheckInScan(Venue venue, Section section);
+  Future simulateCheckInScan(Venue venue, Section section, FirebaseUser user);
 
-  Future simulateCheckOutScan(Venue venue, Section section);
+  Future simulateCheckOutScan(Venue venue, Section section, FirebaseUser user);
 
   Stream<Device> getDevice(String deviceId);
 
@@ -49,7 +50,7 @@ class LocalGladminApi implements GladminApi {
   }
 
   @override
-  simulateCheckInScan(Venue venue, Section section) async {
+  simulateCheckInScan(Venue venue, Section section, FirebaseUser user) async {
     final hangers = await section.hangers
         .where('state', isEqualTo: HangerState.AVAILABLE.index)
         .limit(1)
@@ -60,7 +61,7 @@ class LocalGladminApi implements GladminApi {
         'id': Random().nextInt(9999).toString(),
         'state': HangerState.UNAVAILABLE.index,
         'stateUpdated': FieldValue.serverTimestamp(),
-        'user': _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1')
+        'user': _db.collection(pathUsers).document(user.uid)
       });
     } else {
       hangerRef = hangers.documents.first.reference;
@@ -87,10 +88,11 @@ class LocalGladminApi implements GladminApi {
   }
 
   @override
-  simulateCheckOutScan(Venue venue, Section section) async {
+  simulateCheckOutScan(Venue venue, Section section, FirebaseUser user) async {
     final reservations = await venue.reservations
         .where(Reservation.jsonSection, isEqualTo: section.ref)
         .where(Reservation.jsonState, isEqualTo: ReservationState.CHECKED_IN.index)
+        .where(Reservation.jsonUser, isEqualTo: _db.collection(pathUsers).document(user.uid))
         .getDocuments();
     if (reservations.documents.isEmpty) {
       return Future(() => false);
