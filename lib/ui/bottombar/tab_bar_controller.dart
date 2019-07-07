@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
-import 'package:garderobeladmin/ui/bottombar/employees.dart';
 import 'package:garderobeladmin/ui/bottombar/reservations.dart';
 import 'package:garderobeladmin/ui/bottombar/venue_settings_view.dart';
 import 'package:garderobeladmin/ui/bottombar/wardrobe.dart';
@@ -25,7 +24,7 @@ class _TabBarControllerState extends State<TabBarController> {
   static const List<Widget> _tabs = <Widget>[
     WardrobeQueueScreen(),
     Reservations(),
-    Employees(),
+//    Employees(),
     VenueSettingsView()
   ];
 
@@ -57,12 +56,12 @@ class _TabBarControllerState extends State<TabBarController> {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           backgroundColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.people),
 //          activeIcon: Icon(
 //            Icons.home,
 //          ),
           title: Text(
-            'Wardrobe',
+            'Queue',
           ),
         ),
         BottomNavigationBarItem(
@@ -72,13 +71,13 @@ class _TabBarControllerState extends State<TabBarController> {
             'History',
           ),
         ),
-        BottomNavigationBarItem(
-          backgroundColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.person),
-          title: Text(
-            "Profile",
-          ),
-        ),
+//        BottomNavigationBarItem(
+//          backgroundColor: Theme.of(context).primaryColor,
+//          icon: Icon(Icons.person),
+//          title: Text(
+//            "Profile",
+//          ),
+//        ),
         BottomNavigationBarItem(
           backgroundColor: Theme.of(context).primaryColor,
           icon: Icon(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/ui/settings/edit_venue_screen.dart';
 import 'package:garderobeladmin/ui/settings/manage_venue.dart';
@@ -27,6 +28,17 @@ class VenueSettingsView extends StatelessWidget {
           title: Text("Payment options"),
           subtitle: Text("Manage your payment options"),
           leading: Icon(Icons.credit_card),
+        ),
+        ListTile(
+          title: Text("Profile"),
+          subtitle: Text("Manage your user profile"),
+          leading: Icon(Icons.person_pin),
+        ),
+        ListTile(
+          title: Text("Sign out"),
+//          subtitle: Text(""),
+          leading: Icon(Icons.exit_to_app),
+          onTap: () => FirebaseAuth.instance.signOut(),
         )
       ],
     );
