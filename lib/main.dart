@@ -29,7 +29,12 @@ class GarderobelAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var materialApp = MaterialApp(
-        title: _title, theme: lightThemeData(), darkTheme: darkThemeData(), home: Authenticator());
+      title: _title,
+      theme: lightThemeData(),
+      darkTheme: darkThemeData(),
+      home: Authenticator(),
+//      initialRoute: Authenticator.routeName,
+    );
 
     return MultiProvider(
         providers: [
@@ -52,6 +57,8 @@ class GarderobelAdmin extends StatelessWidget {
 }
 
 class Authenticator extends StatefulWidget {
+  static const routeName = '/';
+
   Authenticator({Key key}) : super(key: key);
 
   _AuthenticatorState createState() => _AuthenticatorState();

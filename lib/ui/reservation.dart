@@ -4,8 +4,20 @@ import 'package:garderobeladmin/services/api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+class ReservationDetailArguments {
+  final String reservationId;
+
+  ReservationDetailArguments({@required this.reservationId});
+}
+
 class ReservationDetails extends StatelessWidget {
   final String _reservationId;
+
+  static const routeName = '/reservation';
+
+  static MaterialPageRoute route({@required String reservationId}) {
+    return MaterialPageRoute(builder: (context) => ReservationDetails(reservationId));
+  }
 
   ReservationDetails(this._reservationId);
 
