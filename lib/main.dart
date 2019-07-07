@@ -3,10 +3,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:garderobeladmin/services/api.dart';
-import 'package:garderobeladmin/services/locator.dart';
-import 'package:garderobeladmin/ui/bottombar/tab_bar_controller.dart';
-import 'package:garderobeladmin/ui/sign_in.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +10,10 @@ import 'models/device.dart';
 import 'models/section.dart';
 import 'models/user.dart';
 import 'models/venue.dart';
+import 'services/api.dart';
+import 'services/locator.dart';
+import 'ui/bottombar/tab_bar_controller.dart';
+import 'ui/sign_in.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
 
@@ -29,7 +29,12 @@ class GarderobelAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var materialApp = MaterialApp(
-        title: _title, theme: lightThemeData(), darkTheme: darkThemeData(), home: Authenticator());
+      title: _title,
+      theme: lightThemeData(),
+      darkTheme: darkThemeData(),
+      home: Authenticator(),
+//      initialRoute: Authenticator.routeName,
+    );
 
     return MultiProvider(
         providers: [
@@ -52,6 +57,8 @@ class GarderobelAdmin extends StatelessWidget {
 }
 
 class Authenticator extends StatefulWidget {
+  static const routeName = '/';
+
   Authenticator({Key key}) : super(key: key);
 
   _AuthenticatorState createState() => _AuthenticatorState();

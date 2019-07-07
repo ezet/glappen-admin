@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/venue.dart';
+import 'package:garderobeladmin/ui/reservation.dart';
 import 'package:provider/provider.dart';
-
-import '../reservation.dart';
 
 class History extends StatelessWidget {
   const History({Key key}) : super(key: key);
@@ -42,8 +41,8 @@ class ReservationList extends StatelessWidget {
   Widget buildCheckInItem(BuildContext context, Reservation reservation) {
     final makeListTile = ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
-        onTap: () => Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ReservationDetails(reservation.docId))),
+        onTap: () =>
+            Navigator.push(context, ReservationDetails.route(reservationId: reservation.docId)),
         leading: Container(
           padding: EdgeInsets.only(right: 12.0),
           decoration: new BoxDecoration(

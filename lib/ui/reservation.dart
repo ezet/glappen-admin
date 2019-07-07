@@ -7,6 +7,12 @@ import 'package:provider/provider.dart';
 class ReservationDetails extends StatelessWidget {
   final String _reservationId;
 
+  static const routeName = '/reservation';
+
+  static MaterialPageRoute route({@required String reservationId}) {
+    return MaterialPageRoute(builder: (context) => ReservationDetails(reservationId));
+  }
+
   ReservationDetails(this._reservationId);
 
   Widget build(BuildContext context) {
@@ -19,12 +25,12 @@ class ReservationDetails extends StatelessWidget {
 class ProfileData extends StatelessWidget {
   Widget build(BuildContext context) {
     final reservation = Provider.of<Reservation>(context);
-    // TODO: implement profile UI
+    // TODO Andreas: implement profile UI
     return Scaffold(
       appBar: AppBar(
         title: Text("Reservation"),
       ),
-      body: Center(),
+      body: Center(child: Text("TODO: Sondre")),
     );
   }
 }

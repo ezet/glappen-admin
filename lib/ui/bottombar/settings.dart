@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:garderobeladmin/ui/profile.dart';
 import 'package:garderobeladmin/ui/settings/edit_venue_screen.dart';
 import 'package:garderobeladmin/ui/settings/manage_venue.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatelessWidget {
   const Settings({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<FirebaseUser>(context);
     return ListView(
       children: <Widget>[
         ListTile(
@@ -31,6 +34,8 @@ class Settings extends StatelessWidget {
         ),
         ListTile(
           title: Text("Profile"),
+          onTap: () =>
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(user.uid))),
           subtitle: Text("Manage your user profile"),
           leading: Icon(Icons.person_pin),
         ),
