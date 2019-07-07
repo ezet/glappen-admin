@@ -19,6 +19,8 @@ abstract class GladminApi {
   Stream<User> getUser(String userId);
 
   void updateUser(User user);
+
+  getReservation(String reservationId) {}
 }
 
 class LocalGladminApi implements GladminApi {
@@ -115,5 +117,11 @@ class LocalGladminApi implements GladminApi {
       User.jsonName: user.name,
       User.jsonEmail: user.email
     };
+  }
+
+  @override
+  getReservation(String reservationId) {
+    // TODO: implement getReservation
+    return null;
   }
 }

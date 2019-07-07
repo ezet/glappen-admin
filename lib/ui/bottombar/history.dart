@@ -3,6 +3,8 @@ import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:provider/provider.dart';
 
+import '../reservation.dart';
+
 class History extends StatelessWidget {
   const History({Key key}) : super(key: key);
 
@@ -28,13 +30,9 @@ class ReservationList extends StatelessWidget {
         child: CircularProgressIndicator(),
       );
     }
-    return ListView.separated(
+    return ListView.builder(
 //      padding: EdgeInsets.all(10),
       itemCount: reservations.length,
-      separatorBuilder: (BuildContext context, int index) => Divider(
-            height: 1,
-            color: Colors.grey,
-          ),
       itemBuilder: (context, i) {
         return buildCheckInItem(context, reservations[i]);
       },
@@ -42,12 +40,37 @@ class ReservationList extends StatelessWidget {
   }
 
   Widget buildCheckInItem(BuildContext context, Reservation reservation) {
-    return Container(
-//        color: Color.fromRGBO(27, 31, 34, 1),
-        child: InkWell(
-            child: Padding(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      child: Text("res"),
-    )));
+    final makeListTile = ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+        onTap: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => ReservationDetails(reservation.docId))),
+        leading: Container(
+          padding: EdgeInsets.only(right: 12.0),
+          decoration: new BoxDecoration(
+              border: new Border(right: new BorderSide(width: 1.0, color: Colors.white24))),
+          child: Icon(Icons.receipt, color: Colors.white),
+        ),
+        title: Text(
+          reservation.userName,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+        subtitle: Row(
+          children: <Widget>[
+            Icon(Icons.linear_scale, color: Colors.yellowAccent),
+            Text(" ${reservation.hangerName}", style: TextStyle(color: Colors.white))
+          ],
+        ),
+        trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white, size: 30.0));
+
+    return Card(
+      elevation: 8.0,
+      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      child: Container(
+        decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+        child: makeListTile,
+      ),
+    );
   }
 }
