@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
-import 'package:garderobeladmin/ui/bottombar/reservations.dart';
-import 'package:garderobeladmin/ui/bottombar/venue_settings_view.dart';
-import 'package:garderobeladmin/ui/bottombar/wardrobe.dart';
+import 'package:garderobeladmin/ui/bottombar/history.dart';
+import 'package:garderobeladmin/ui/bottombar/queue.dart';
+import 'package:garderobeladmin/ui/bottombar/settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -22,10 +22,10 @@ class _TabBarControllerState extends State<TabBarController> {
   int _selectedIndex = 0;
 
   static const List<Widget> _tabs = <Widget>[
-    WardrobeQueueScreen(),
-    Reservations(),
+    Queue(),
+    History(),
 //    Employees(),
-    VenueSettingsView()
+    Settings()
   ];
 
   void _onItemTapped(int index) {

@@ -7,8 +7,8 @@ import 'package:garderobeladmin/ui/profile.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class WardrobeQueueScreen extends StatelessWidget {
-  const WardrobeQueueScreen({Key key}) : super(key: key);
+class Queue extends StatelessWidget {
+  const Queue({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +47,9 @@ class CoatHangerList extends StatelessWidget {
                 ),
             itemBuilder: (context, i) {
               if (reservations[i].state == ReservationState.CHECKING_IN) {
-                return _buildCheckOutItem(context, reservations, i, api);
+                return _buildCheckOutItem(context, reservations[i]);
               } else {
-                return _buildCheckOutItem(context, reservations, i, api);
+                return _buildCheckOutItem(context, reservations[i]);
               }
             },
           ),
@@ -83,7 +83,9 @@ class CoatHangerList extends StatelessWidget {
   }
 
   Container _buildCheckOutItem(
-      BuildContext context, List<Reservation> reservations, int i, GladminApi api) {
+    BuildContext context,
+    Reservation reservation,
+  ) {
     final venue = Provider.of<Venue>(context);
     return Container(
       height: 110,
@@ -121,14 +123,14 @@ class CoatHangerList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    reservations[i].state == ReservationState.CHECKING_OUT ? "OUT" : "IN",
+                    reservation.state == ReservationState.CHECKING_OUT ? "OUT" : "IN",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
                     ),
                   ),
                   Text(
-                    reservations[i].hangerName,
+                    reservation.hangerName,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 30,
@@ -138,9 +140,9 @@ class CoatHangerList extends StatelessWidget {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Profile(reservations[i].user.documentID))),
+                            builder: (context) => Profile(reservation.user.documentID))),
                     child: Text(
-                      reservations[i].userName ?? "",
+                      reservation.userName ?? "",
                       maxLines: 1,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -171,7 +173,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
-                    venue.handleConfirmation(reservations[i]);
+                    venue.handleConfirmation(reservation);
                   },
                   child: Container(
                     child: Center(
