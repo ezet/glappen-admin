@@ -3,9 +3,10 @@ import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
-import 'package:garderobeladmin/ui/profile.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+
+import '../reservation.dart';
 
 class Queue extends StatelessWidget {
   const Queue({Key key}) : super(key: key);
@@ -47,7 +48,7 @@ class CoatHangerList extends StatelessWidget {
                 ),
             itemBuilder: (context, i) {
               if (reservations[i].state == ReservationState.CHECKING_IN) {
-                return _buildCheckOutItem(context, reservations[i]);
+                return _buildCheckInItem(context, reservations[i]);
               } else {
                 return _buildCheckOutItem(context, reservations[i]);
               }
@@ -64,25 +65,52 @@ class CoatHangerList extends StatelessWidget {
     );
   }
 
-  Container _buildCheckInItem(
-      BuildContext context, List<Reservation> hangers, int i, GladminApi api) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(47, 51, 54, 1),
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
+  Widget _buildCheckInItem(BuildContext context, Reservation reservation) {
+    final venue = Provider.of<Venue>(context);
+    final makeListTile = ListTile(
+//        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
+        onTap: () =>
+            Navigator.push(context, ReservationDetails.route(reservationId: reservation.docId)),
+//        leading: Container(
+//          padding: EdgeInsets.only(right: 12.0),
+//          decoration: new BoxDecoration(
+//              border: new Border(right: new BorderSide(width: 1.0, color: Colors.white24))),
+//          child: Icon(Icons.receipt, color: Colors.white),
+//        ),
+        title: Text(
+          reservation.userName,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        border: Border.all(
-          color: Colors.amber,
-          width: 1.0,
-          style: BorderStyle.solid,
+        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+        subtitle: Row(
+          children: <Widget>[
+//            Icon(Icons.zoom_out_map, color: Colors.yellowAccent),
+            Text(
+              reservation.hangerName,
+            )
+          ],
         ),
-      ),
-      height: 200,
+        trailing: Container(
+            child: InkWell(
+          onTap: () async {
+            venue.handleConfirmation(reservation);
+          },
+          child: Icon(
+            Icons.check_circle,
+            color: Color.fromRGBO(105, 212, 103, 1),
+            size: 33,
+          ),
+        )));
+
+    return Card(
+      elevation: 5.0,
+      color: Color.fromRGBO(27, 31, 34, 1),
+      child: makeListTile,
     );
   }
 
-  Container _buildCheckOutItem(
+  Widget _buildCheckOutItem(
     BuildContext context,
     Reservation reservation,
   ) {
@@ -118,30 +146,28 @@ class CoatHangerList extends StatelessWidget {
                   ),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    reservation.state == ReservationState.CHECKING_OUT ? "OUT" : "IN",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context, ReservationDetails.route(reservationId: reservation.docId)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      reservation.state == ReservationState.CHECKING_OUT ? "OUT" : "IN",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
                     ),
-                  ),
-                  Text(
-                    reservation.hangerName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
+                    Text(
+                      reservation.hangerName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Profile(reservation.user.documentID))),
-                    child: Text(
+                    Text(
                       reservation.userName ?? "",
                       maxLines: 1,
                       style: TextStyle(
@@ -149,8 +175,8 @@ class CoatHangerList extends StatelessWidget {
                         fontSize: 20,
                       ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
           ),

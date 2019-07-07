@@ -4,12 +4,6 @@ import 'package:garderobeladmin/services/api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class ReservationDetailArguments {
-  final String reservationId;
-
-  ReservationDetailArguments({@required this.reservationId});
-}
-
 class ReservationDetails extends StatelessWidget {
   final String _reservationId;
 
@@ -31,12 +25,12 @@ class ReservationDetails extends StatelessWidget {
 class ProfileData extends StatelessWidget {
   Widget build(BuildContext context) {
     final reservation = Provider.of<Reservation>(context);
-    // TODO: implement profile UI
+    // TODO Andreas: implement profile UI
     return Scaffold(
       appBar: AppBar(
         title: Text("Reservation"),
       ),
-      body: Center(),
+      body: Center(child: Text("TODO: Sondre")),
     );
   }
 }

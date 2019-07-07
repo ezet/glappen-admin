@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/venue.dart';
+import 'package:garderobeladmin/ui/reservation.dart';
 import 'package:provider/provider.dart';
-
-import '../reservation.dart';
 
 class History extends StatelessWidget {
   const History({Key key}) : super(key: key);
