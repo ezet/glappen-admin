@@ -73,7 +73,7 @@ class LocalGladminApi implements GladminApi {
       }, merge: true);
     }
 
-    final userRef = _db.document('/users/TCaRw69hRNRlwhXvfCPYYt3XaJx1');
+    final userRef = _db.collection(pathUsers).document(user.uid);
 
     final hangerName = await hangerRef.get().then((item) => item.data[CoatHanger.jsonId]);
     final userName = await userRef.get().then((item) => item.data[User.jsonName]);
