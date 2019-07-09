@@ -7,10 +7,15 @@ class Device {
   final DocumentReference section;
   final DocumentReference venue;
 
-  Device.fromFirestore(DocumentSnapshot doc)
-      : docId = doc.documentID,
-        section = doc.data['section'],
-        venue = doc.data['section'].parent().parent().parent().parent();
+  const Device({this.docId, this.section, this.venue});
+
+  factory Device.fromFirestore(DocumentSnapshot doc) {
+    final docId = doc.documentID;
+    final data = doc.data ?? {};
+    final section = data['section'] ?? null;
+    final venue = data['section']?.parent()?.parent()?.parent()?.parent() ?? null;
+    return Device(docId: docId, section: section, venue: venue);
+  }
 
   Stream<Section> getSection() {
     return section.snapshots().map((section) => Section.fromFirestore(section));
