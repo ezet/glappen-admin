@@ -95,7 +95,7 @@ class _TabBarControllerState extends State<TabBarController> {
   AppBar _buildAppBar() {
     final Venue venue = Provider.of(context);
     final Section section = Provider.of(context);
-    final GladminApi api = Provider.of<GetIt>(context).get();
+    final GladminService api = Provider.of<GetIt>(context).get();
     final user = Provider.of<FirebaseUser>(context);
 
     return AppBar(
@@ -106,20 +106,20 @@ class _TabBarControllerState extends State<TabBarController> {
         style: TextStyle(color: Colors.white, fontSize: 22),
       ),
       actions: <Widget>[
-        FlatButton(
-          splashColor: Colors.red,
-          child: Row(
-            children: <Widget>[Text('Scan in')],
-          ),
-          onPressed: () async => {await api.simulateCheckInScan(venue, section, user)},
-        ),
-        FlatButton(
-          splashColor: Colors.red,
-          child: Row(
-            children: <Widget>[Text('Scan out')],
-          ),
-          onPressed: () async => {await api.simulateCheckOutScan(venue, section, user)},
-        ),
+//        FlatButton(
+//          splashColor: Colors.red,
+//          child: Row(
+//            children: <Widget>[Text('Scan in')],
+//          ),
+//          onPressed: () async => {await api.simulateCheckInScan(venue, section, user)},
+//        ),
+//        FlatButton(
+//          splashColor: Colors.red,
+//          child: Row(
+//            children: <Widget>[Text('Scan out')],
+//          ),
+//          onPressed: () async => {await api.simulateCheckOutScan(venue, section, user)},
+//        ),
       ],
     );
   }

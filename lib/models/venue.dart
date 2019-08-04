@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garderobel_api/models/hanger.dart';
+import 'package:garderobel_api/models/reservation.dart';
 import 'package:garderobeladmin/models/coat_hanger.dart';
-import 'package:garderobeladmin/models/reservation.dart';
 import 'package:garderobeladmin/models/wardrobe.dart';
 
 class Venue {
@@ -70,7 +71,7 @@ class Venue {
   Stream<List<Reservation>> getReservations() {
     return reservations
         .snapshots()
-        .map((list) => list.documents.map((item) => Reservation.fromFirestore(item)).toList());
+        .map((list) => list.documents.map((item) => ReservationRef.fromFirestore(item)).toList());
   }
 
   Future<DocumentReference> addWardrobe(Wardrobe wardrobe) async {
@@ -84,8 +85,8 @@ class Venue {
   Future<void> handleRejection(Reservation reservation) async {
     if (reservation.state == ReservationState.CHECKING_IN) {
       await reservation.ref.updateData({
-        Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-        Reservation.jsonState: ReservationState.CHECK_IN_REJECTED.index,
+        ReservationRef.jsonStateUpdated: FieldValue.serverTimestamp(),
+        ReservationRef.jsonState: ReservationState.CHECK_IN_REJECTED.index,
       });
       return reservation.hanger.updateData({
         CoatHanger.jsonState: HangerState.AVAILABLE.index,
@@ -93,51 +94,32 @@ class Venue {
       });
     } else {
       return reservation.ref.updateData({
-        Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-        Reservation.jsonState: ReservationState.CHECKED_IN.index,
+        ReservationRef.jsonStateUpdated: FieldValue.serverTimestamp(),
+        ReservationRef.jsonState: ReservationState.CHECKED_IN.index,
       });
     }
   }
 
-  Future<void> handleConfirmation(Reservation reservation) async {
-    if (reservation.state == ReservationState.CHECKING_IN) {
-      return _confirmCheckIn(reservation);
-    } else if (reservation.state == ReservationState.CHECKING_OUT) {
-      return _confirmCheckOut(reservation);
-    } else {
-      throw "Invalid reservation state: ${reservation.state}";
-    }
-  }
-
-  Future<void> _confirmCheckIn(Reservation reservation) async {
-    return reservation.ref.updateData({
-      Reservation.jsonCheckIn: FieldValue.serverTimestamp(),
-      Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-      Reservation.jsonState: ReservationState.CHECKED_IN.index,
-    });
-//    return reservation.ref.setData({
-//      'stateUpdated': FieldValue.serverTimestamp(),
-//      'state': HangerState.UNAVAILABLE.index,
-//      'reservation': reservation
-//    }, merge: true).then((value) => true, onError: (error) {
+//  Future<void> _confirmCheckIn(Reservation reservation) async {
+//    return reservation.ref.updateData({
+//      Reservation.jsonCheckIn: FieldValue.serverTimestamp(),
+//      Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
+//      Reservation.jsonState: ReservationState.CHECKED_IN.index,
+//    });
+//  }
+//
+//  Future<void> _confirmCheckOut(Reservation reservation) async {
+//    await reservation.ref.updateData({
+//      Reservation.jsonCheckOut: FieldValue.serverTimestamp(),
+//      Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
+//      Reservation.jsonState: ReservationState.CHECKED_OUT.index,
+//    });
+//
+//    return reservation.hanger.updateData({
+//      CoatHanger.jsonStateUpdated: FieldValue.serverTimestamp(),
+//      CoatHanger.jsonState: HangerState.AVAILABLE.index,
+//    }).then((value) => true, onError: (error) {
 //      print(error);
 //      return false;
 //    });
-  }
-
-  Future<void> _confirmCheckOut(Reservation reservation) async {
-    await reservation.ref.updateData({
-      Reservation.jsonCheckOut: FieldValue.serverTimestamp(),
-      Reservation.jsonStateUpdated: FieldValue.serverTimestamp(),
-      Reservation.jsonState: ReservationState.CHECKED_OUT.index,
-    });
-
-    return reservation.hanger.updateData({
-      CoatHanger.jsonStateUpdated: FieldValue.serverTimestamp(),
-      CoatHanger.jsonState: HangerState.AVAILABLE.index,
-    }).then((value) => true, onError: (error) {
-      print(error);
-      return false;
-    });
-  }
 }

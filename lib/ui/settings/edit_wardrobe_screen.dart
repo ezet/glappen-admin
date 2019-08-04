@@ -24,7 +24,7 @@ class EditWardrobeFormState extends State<EditWardrobeForm> {
 
   @override
   Widget build(BuildContext context) {
-    final api = Provider.of<GetIt>(context).get<GladminApi>();
+    final api = Provider.of<GetIt>(context).get<GladminService>();
 
     return SafeArea(
       child: Form(

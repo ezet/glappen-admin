@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:garderobeladmin/models/reservation.dart';
+import 'package:garderobel_api/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
-import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +26,6 @@ class CoatHangerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final api = Provider.of<GetIt>(context).get<GladminApi>();
-
     var reservations = Provider.of<List<Reservation>>(context);
     if (reservations == null) {
       return Center(
@@ -43,9 +40,9 @@ class CoatHangerList extends StatelessWidget {
             padding: EdgeInsets.all(10),
             itemCount: reservations.length,
             separatorBuilder: (BuildContext context, int index) => Divider(
-                  height: 20,
-                  color: Colors.transparent,
-                ),
+              height: 20,
+              color: Colors.transparent,
+            ),
             itemBuilder: (context, i) {
               if (reservations[i].state == ReservationState.CHECKING_IN) {
                 return _buildCheckInItem(context, reservations[i]);
@@ -66,7 +63,7 @@ class CoatHangerList extends StatelessWidget {
   }
 
   Widget _buildCheckInItem(BuildContext context, Reservation reservation) {
-    final venue = Provider.of<Venue>(context);
+    final api = Provider.of<GetIt>(context).get<GladminService>();
     final makeListTile = ListTile(
 //        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
         onTap: () =>
@@ -78,7 +75,7 @@ class CoatHangerList extends StatelessWidget {
 //          child: Icon(Icons.receipt, color: Colors.white),
 //        ),
         title: Text(
-          reservation.userName,
+          reservation.userName ?? "",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
@@ -94,7 +91,7 @@ class CoatHangerList extends StatelessWidget {
         trailing: Container(
             child: InkWell(
           onTap: () async {
-            venue.handleConfirmation(reservation);
+            api.confirmCheckIn(reservation.ref);
           },
           child: Icon(
             Icons.check_circle,
@@ -114,7 +111,7 @@ class CoatHangerList extends StatelessWidget {
     BuildContext context,
     Reservation reservation,
   ) {
-    final venue = Provider.of<Venue>(context);
+    final api = Provider.of<GetIt>(context).get<GladminService>();
     return Container(
       height: 110,
       decoration: BoxDecoration(
@@ -199,7 +196,7 @@ class CoatHangerList extends StatelessWidget {
                   ),
                   splashColor: Color.fromRGBO(105, 212, 103, 1),
                   onTap: () async {
-                    venue.handleConfirmation(reservation);
+                    api.confirmCheckOut(reservation);
                   },
                   child: Container(
                     child: Center(

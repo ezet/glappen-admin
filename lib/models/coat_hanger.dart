@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:garderobel_api/models/hanger.dart';
 import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/models/venue.dart';
-
-enum HangerState {
-  AVAILABLE,
-  UNAVAILABLE,
-}
 
 class CoatHanger {
   final DocumentReference ref;

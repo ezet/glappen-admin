@@ -7,6 +7,6 @@ import 'api.dart';
 GetIt getLocator(BuildContext context) {
   GetIt locator = GetIt();
   locator.registerLazySingleton<Firestore>(() => Firestore.instance);
-  locator.registerLazySingleton<GladminApi>(() => LocalGladminApi(locator.get()));
+  locator.registerLazySingleton<GladminService>(() => GladminService(locator.get()));
   return locator;
 }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:garderobeladmin/models/reservation.dart';
-import 'package:garderobeladmin/models/venue.dart';
+import 'package:garderobel_api/models/reservation.dart';
 import 'package:garderobeladmin/models/wardrobe.dart';
 
 import 'coat_hanger.dart';
@@ -30,14 +29,15 @@ class Section {
   DocumentReference get venueRef => ref.parent().parent().parent().parent();
 
   Stream<List<Reservation>> getReservations() {
-    return venueRef
-        .collection(Venue.jsonReservations)
-        .where(Reservation.jsonState, isGreaterThanOrEqualTo: ReservationState.CHECKING_OUT.index)
+    return venueRef.firestore
+        .collection('reservations')
+        .where(ReservationRef.jsonState,
+            isGreaterThanOrEqualTo: ReservationState.CHECKING_OUT.index)
 //        .orderBy('state')
 //        .orderBy('stateUpdated')
         .snapshots()
         .handleError(() => print("error"))
-        .map((list) => list.documents.map((doc) => Reservation.fromFirestore(doc)).toList());
+        .map((list) => list.documents.map((doc) => ReservationRef.fromFirestore(doc)).toList());
   }
 
   Stream<List<CoatHanger>> getCheckingIn() {

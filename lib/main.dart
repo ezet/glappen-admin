@@ -43,7 +43,7 @@ class GarderobelAdmin extends StatelessWidget {
         ],
         child: Consumer<GetIt>(
           builder: (_, getIt, widget) => StreamProvider<Device>.value(
-              value: getIt.get<GladminApi>().getDevice('kEPiq0dXzA3uRIoyaGDC'),
+              value: getIt.get<GladminService>().getDevice('kEPiq0dXzA3uRIoyaGDC'),
               child: Consumer<Device>(
                   builder: (context, device, child) => MultiProvider(
                         providers: [
@@ -86,7 +86,7 @@ class _AuthenticatorState extends State<Authenticator> {
     if (_currentUser == null) {
       return SignIn();
     } else {
-      final api = Provider.of<GetIt>(context).get<GladminApi>();
+      final api = Provider.of<GetIt>(context).get<GladminService>();
       final user = User(
           docId: _currentUser.uid,
           name: _currentUser.displayName,

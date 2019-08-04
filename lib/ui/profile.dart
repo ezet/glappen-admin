@@ -10,7 +10,7 @@ class Profile extends StatelessWidget {
   Profile(this._userId);
 
   Widget build(BuildContext context) {
-    final GladminApi db = Provider.of<GetIt>(context).get();
+    final GladminService db = Provider.of<GetIt>(context).get();
 
     return StreamProvider<User>.value(value: db.getUser(_userId), child: ProfileData());
   }
