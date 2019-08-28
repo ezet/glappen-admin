@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobel_api/models/reservation.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/services/api.dart';
-import 'package:get_it/get_it.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:provider/provider.dart';
 
 import '../reservation.dart';
@@ -63,7 +63,7 @@ class CoatHangerList extends StatelessWidget {
   }
 
   Widget _buildCheckInItem(BuildContext context, Reservation reservation) {
-    final api = Provider.of<GetIt>(context).get<GladminService>();
+    final api = locator.get<GladminService>();
     final makeListTile = ListTile(
 //        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
         onTap: () =>
@@ -91,7 +91,7 @@ class CoatHangerList extends StatelessWidget {
         trailing: Container(
             child: InkWell(
           onTap: () async {
-            api.confirmCheckIn(reservation.ref);
+            api.confirmCheckIn(reservation);
           },
           child: Icon(
             Icons.check_circle,
@@ -111,7 +111,7 @@ class CoatHangerList extends StatelessWidget {
     BuildContext context,
     Reservation reservation,
   ) {
-    final api = Provider.of<GetIt>(context).get<GladminService>();
+    final api = locator.get<GladminService>();
     return Container(
       height: 110,
       decoration: BoxDecoration(

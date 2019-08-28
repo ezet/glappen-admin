@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/models/wardrobe.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +25,7 @@ class EditWardrobeFormState extends State<EditWardrobeForm> {
 
   @override
   Widget build(BuildContext context) {
-    final api = Provider.of<GetIt>(context).get<GladminService>();
+    final api = locator.get<GladminService>();
 
     return SafeArea(
       child: Form(

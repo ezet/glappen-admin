@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/venue.dart';
 import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:garderobeladmin/ui/bottombar/history.dart';
 import 'package:garderobeladmin/ui/bottombar/queue.dart';
 import 'package:garderobeladmin/ui/bottombar/settings.dart';
@@ -95,7 +96,7 @@ class _TabBarControllerState extends State<TabBarController> {
   AppBar _buildAppBar() {
     final Venue venue = Provider.of(context);
     final Section section = Provider.of(context);
-    final GladminService api = Provider.of<GetIt>(context).get();
+    final GladminService api = locator.get();
     final user = Provider.of<FirebaseUser>(context);
 
     return AppBar(

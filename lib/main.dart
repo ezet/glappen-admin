@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get_it/get_it.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:provider/provider.dart';
 
 import 'models/device.dart';
@@ -11,13 +11,13 @@ import 'models/section.dart';
 import 'models/user.dart';
 import 'models/venue.dart';
 import 'services/api.dart';
-import 'services/locator.dart';
 import 'ui/bottombar/tab_bar_controller.dart';
 import 'ui/sign_in.dart';
 import 'ui/theme/dark_theme.dart';
 import 'ui/theme/light_theme.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(
     GarderobelAdmin(),
   );
@@ -37,22 +37,20 @@ class GarderobelAdmin extends StatelessWidget {
     );
 
     return MultiProvider(
-        providers: [
-          StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
-          Provider<GetIt>.value(value: getLocator(context)),
-        ],
-        child: Consumer<GetIt>(
-          builder: (_, getIt, widget) => StreamProvider<Device>.value(
-              value: getIt.get<GladminService>().getDevice('kEPiq0dXzA3uRIoyaGDC'),
-              child: Consumer<Device>(
-                  builder: (context, device, child) => MultiProvider(
-                        providers: [
-                          StreamProvider<Venue>.value(value: device?.getVenue()),
-                          StreamProvider<Section>.value(value: device?.getSection()),
-                        ],
-                        child: materialApp,
-                      ))),
-        ));
+      providers: [
+        StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+        StreamProvider<Device>.value(
+            value: locator.get<GladminService>().getDevice('kEPiq0dXzA3uRIoyaGDC'))
+      ],
+      child: Consumer<Device>(
+          builder: (context, device, child) => MultiProvider(
+                providers: [
+                  StreamProvider<Venue>.value(value: device?.getVenue()),
+                  StreamProvider<Section>.value(value: device?.getSection()),
+                ],
+                child: materialApp,
+              )),
+    );
   }
 }
 
@@ -86,7 +84,7 @@ class _AuthenticatorState extends State<Authenticator> {
     if (_currentUser == null) {
       return SignIn();
     } else {
-      final api = Provider.of<GetIt>(context).get<GladminService>();
+      final api = locator.get<GladminService>();
       final user = User(
           docId: _currentUser.uid,
           name: _currentUser.displayName,

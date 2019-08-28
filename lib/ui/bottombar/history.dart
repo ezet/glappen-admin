@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/models/reservation.dart';
-import 'package:garderobeladmin/models/venue.dart';
+import 'package:garderobeladmin/models/section.dart';
+import 'package:garderobeladmin/services/api.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:garderobeladmin/ui/reservation.dart';
 import 'package:provider/provider.dart';
 
@@ -9,10 +11,11 @@ class History extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final venue = Provider.of<Venue>(context);
+    final section = Provider.of<Section>(context);
+    final gladmin = locator.get<GladminService>();
 
     return StreamProvider<List<Reservation>>.value(
-        value: venue?.getReservations(), child: ReservationList());
+        value: gladmin.getReservations(section), child: ReservationList());
   }
 }
 
@@ -50,7 +53,7 @@ class ReservationList extends StatelessWidget {
           child: Icon(Icons.receipt, color: Colors.white),
         ),
         title: Text(
-          reservation.userName,
+          reservation.userName ?? "",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garderobel_api/models/reservation.dart';
 import 'package:garderobeladmin/services/api.dart';
-import 'package:get_it/get_it.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:provider/provider.dart';
 
 class ReservationDetails extends StatelessWidget {
@@ -16,7 +16,7 @@ class ReservationDetails extends StatelessWidget {
   ReservationDetails(this._reservationId);
 
   Widget build(BuildContext context) {
-    final api = Provider.of<GetIt>(context).get<GladminService>();
+    final api = locator.get<GladminService>();
     return StreamProvider<Reservation>.value(
         value: api.getReservation(_reservationId), child: ProfileData());
   }

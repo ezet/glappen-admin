@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garderobeladmin/models/user.dart';
 import 'package:garderobeladmin/services/api.dart';
-import 'package:get_it/get_it.dart';
+import 'package:garderobeladmin/services/locator.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
@@ -10,7 +10,7 @@ class Profile extends StatelessWidget {
   Profile(this._userId);
 
   Widget build(BuildContext context) {
-    final GladminService db = Provider.of<GetIt>(context).get();
+    final GladminService db = locator.get();
 
     return StreamProvider<User>.value(value: db.getUser(_userId), child: ProfileData());
   }

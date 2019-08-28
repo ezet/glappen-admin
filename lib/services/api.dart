@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:garderobel_api/garderobel_client.dart';
 import 'package:garderobel_api/models/reservation.dart';
 import 'package:garderobeladmin/models/device.dart';
+import 'package:garderobeladmin/models/section.dart';
 import 'package:garderobeladmin/models/user.dart';
 
 class GladminService {
@@ -15,6 +16,13 @@ class GladminService {
 
   Future confirmCheckIn(Reservation reservation) {
     return client.confirmCheckInLocal(reservation);
+  }
+
+  Stream<List<Reservation>> getReservations(Section section) {
+    return client.db.reservations
+        .where(ReservationRef.jsonSection, isEqualTo: section.ref)
+        .snapshots()
+        .map((list) => list.documents.map((item) => ReservationRef.fromFirestore(item)).toList());
   }
 
   Future confirmCheckOut(Reservation reservation) {
